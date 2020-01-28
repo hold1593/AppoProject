@@ -44,59 +44,41 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 		<form class="" onsubmit="return validate();" name="memberJoin"
 			action="join">
+
 			<div class="mb-3">
 				<label for="id">아이디</label>
-				<div id="idarea" class="row m-0">
 					<input type="text" class="form-control" name="id" id="id"
 						placeholder="영어 소문자, 숫자 총 6~12글자" maxlength="12">
-						<input type="hidden" name="idDup" id="idDup"
-								value="false"> &nbsp;
-					<button type="button" class="btn btn-primary" id="idDupCheck">중복 검사</button>
-				</div>
-
-				<div class="col-md-6 offset-md-3">
-					<span id="checkId">&nbsp;</span>
-				</div>
+						
+			<div><span id="checkId">&nbsp;</span></div>
+			
 			</div>
-
+			
+			
 
 			<div class="mb-3">
 				<label for="pwd1">비밀번호</label> <input type="text"
-					class="form-control" name="pwd1" placeholder="영문 대/소문자, 숫자 총 8~20자"
-					required>
-			</div>
-			<div class="col-md-6 offset-md-3">
-				<span id="checkPwd1">&nbsp;</span>
+					class="form-control" name="pwd1" id="pwd1"
+					placeholder="영문 대/소문자, 숫자 총 8~20자" required>
 			</div>
 
 
 			<div class="mb-3">
 				<label for="pwd2">비밀번호 재확인</label> <input type="text"
-					class="form-control" name="pwd2" placeholder="비밀번호를 다시한번 입력해주세요."
-					required>
+					class="form-control" name="pwd2" id="pwd1"
+					placeholder="비밀번호를 다시한번 입력해주세요." required>
 			</div>
-			<div class="col-md-6 offset-md-3">
-				<span id="checkPwd2">&nbsp;</span>
-			</div>
-
 
 			<div class="mb-3">
 				<label for="name">이름</label> <input type="text" class="form-control"
-					name="name" placeholder="이름을 입력해주세요." required>
+					name="name" id="name" placeholder="이름을 입력해주세요." required>
 			</div>
-			<div class="col-md-6 offset-md-3">
-				<span id="checkName">&nbsp;</span>
-			</div>
-
-
 
 
 			<div class="mb-3">
 				<label for="email">이메일</label> <input type="email"
-					class="form-control" name="email" placeholder="이메일을 입력해주세요.">
-			</div>
-			<div class="col-md-6 offset-md-3">
-				<span id="checkEmail">&nbsp;</span>
+					class="form-control" name="email" id="email"
+					placeholder="이메일을 입력해주세요.">
 			</div>
 
 
@@ -117,16 +99,12 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 				<div class="col-md-4 mb-3">
 					<input type="number" class="form-control phone" name="phone2"
-						maxlength="4" required>
+						id="phone2" maxlength="4" required>
 				</div>
 
 				<div class="col-md-4 mb-3">
 					<input type="number" class="form-control phone" name="phone3"
-						maxlength="4" required>
-				</div>
-
-				<div class="col-md-6 offset-md-3">
-					<span id="checkPhone">&nbsp;</span>
+						id="phone3" maxlength="4" required>
 				</div>
 
 			</div>
@@ -224,126 +202,157 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 			"name" : false,
 			"phone" : false,
 			"email" : false,
-			"accNo": false,
+			"accNo" : false,
 		};
 
 		$(document).ready(function() {
 
-			var $id = $("#id");
-			var $pwd1 = $("#pwd1");
-			var $pwd2 = $("#pwd2");
-			var $name = $("#name");
-			var $phone2 = $("#phone2");
-			var $phone3 = $("#phone3");
-			var $email = $("#email");
-			var $accNo = $("#accNo");
+				var $id = $("#id");
+				var $pwd1 = $("#pwd1");
+				var $pwd2 = $("#pwd2");
+				var $name = $("#name");
+				var $phone2 = $("#phone2");
+				var $phone3 = $("#phone3");
+				var $email = $("#email");
+				var $accNo = $("#accNo");
 
-			// 아이디  유효성 검사
-			// 영어 대,소문자 + 숫자, 총 6~12글자
-			$id.on("input", function() {
-				var regExp = /^[a-zA-z\d]{6,12}$/;
-				if (!regExp.test($id.val())) {
-					$("#checkId").text("아이디 형식이 유효하지 않습니다.")
-							.css("color", "red");
+				// 아이디  유효성 검사
+				// 영어 대,소문자 + 숫자, 총 6~12글자
+				$id.on("input", function() {
+					var regExp = /^[a-zA-z\d]{6,12}$/;
+					if (!regExp.test($id.val())) {
+						$("#checkId").text("아이디가 형식에 맞지 않습니다.")
+								.css("color", "red");
+				
+						joinCheck.id = false;
 
-					joinCheck.id = false;
+					} else {
+						$("#checkId").text("유효한 형식의 아이디 입니다.").css(
+								"color", "green");
+						joinCheck.id = true;
+						
+						$.ajax({
+							url : "idDupCheck",
+							data : {
+								id : $id.val()
+							},
+							type : "GET",
+							success : function(result) {
+								if (result == "yes") {
+									$("#checkId").text("사용가능한 아이디 입니다.")
+									.css("color", "green");
+									
+									joinCheck.idDup=true;
+								}else{
+									$("#checkId").text("사용할 수 없는 아이디 입니다.")
+									.css("color", "red");
+									
+									joinCheck.idDup=false;
+								}
 
-				} else {
-					$("#checkId").text("유효한 형식의 아이디 입니다.").css(
-							"color", "green");
+							},
+							error : function(e) {
+								console.log("아이디 중복 검사 ajax 실패");
+								console.log(e);
+							}
 
-					joinCheck.id = true;
-				}
+						});
+
+					}
+				});
+			
+				
+
+				// 비밀번호
+				// 영어 대,소문자 + 숫자, 총 8~20글자
+				$pwd1.on("input", function() {
+					var regExp = /^[a-zA-z\d]{8,20}$/;
+
+					if (!regExp.test($pwd1.val())) {
+						$("#pwd1").css("border-color", "red");
+						joinCheck.pwd1 = false;
+
+					} else {
+						$("#pwd1").css("border-color", "green");
+						joinCheck.pwd1 = true;
+					}
+				});
+
+				$pwd2.on("input", function() {
+					if ($pwd1.val().trim() != $pwd2.val().trim()) {
+						$("#pwd2").css("border-color", "red");
+						joinCheck.pwd2 = false;
+					} else {
+						$("#pwd2").css("border-color", "green");
+						joinCheck.pwd2 = true;
+					}
+				});
+
+				$name.on("input", function() {
+					var regExp = /^[가-힣]{2,}$/;
+					if (!regExp.test($(this).val())) {
+						joinCheck.name = false;
+					} else {
+						joinCheck.name = true;
+					}
+				});
+
+				// 전화번호 관련
+				$(".phone").on("input",function() {
+
+					// 전화번호 input 태그에 4글자 이상 입력하지 못하게 하는 이벤트
+					if ($(this).val().length > $(
+							this).prop("maxLength")) {
+						$(this).val($(this).val().slice(0,$(this).prop("maxLength")));
+					}
+
+					// 전화번호 유효성 검사
+					var regExp2 = /^\d{3,4}$/; // 숫자 3~4 글자
+					var regExp3 = /^\d{4,4}$/; // 숫자 4 글자
+
+					if (!regExp2
+							.test($phone2.val())) {
+						$("#phone2").css(
+								"border-color",
+								"red");
+						joinCheck.phone = false;
+						
+					} else {
+						$("#phone2").css(
+								"border-color",
+								"green");
+						joinCheck.phone = true;
+					}
+
+					if (!regExp3
+							.test($phone3.val())) {
+						$("#phone3").css(
+								"border-color",
+								"red");
+						joinCheck.phone = false;
+					} else {
+						$("#phone3").css(
+								"border-color",
+								"green");
+						joinCheck.phone = true;
+					}
+
+				});
+
+				// 이메일 유효성 검사
+				$email.on("input", function() {
+					var regExp = /^[\w]{4,}@[\w]+(\.[\w]+){1,3}$/;
+					if (!regExp.test($email.val())) {
+						$("#email").css("border-color", "red");
+						joinCheck.email = false;
+
+					} else {
+						$("#email").css("border-color", "green");
+						joinCheck.email = true;
+					}
+				});
+
 			});
-
-			// 아이디 중복 
-			$("#idDupCheck").click(
-					function() {
-						window.open("idDupForm","idDupForm","width=300, height=200")
-
-					});
-
-			// 비밀번호
-			// 영어 대,소문자 + 숫자, 총 8~20글자
-			$pwd1.on("input", function() {
-				var regExp = /^[a-zA-z\d]{8,20}$/;
-
-				if (!regExp.test($pwd1.val())) {
-					$("#checkPwd1").text("비밀번호 형식이 유효하지 않습니다.")
-							.css("color", "red");
-
-					joinCheck.pwd1 = false;
-				} else {
-					$("#checkPwd1").text("유효한 형식의 비밀번호 입니다.")
-							.css("color", "green");
-
-					joinCheck.pwd1 = true;
-				}
-			});
-
-			$pwd2.on("input", function() {
-				if ($pwd1.val().trim() != $pwd2.val().trim()) {
-					$("#checkPwd2").text("비밀번호가 일치하지 않습니다.")
-							.css("color", "red");
-					joinCheck.pwd2 = false;
-				} else {
-					$("#checkPwd2").text("비밀번호가 일치합니다.").css(
-							"color", "green");
-					joinCheck.pwd2 = true;
-				}
-			});
-
-			$name.on("input", function() {
-				var regExp = /^[가-힣]{2,}$/;
-				if (!regExp.test($(this).val())) {
-					joinCheck.name = false;
-				} else {
-					joinCheck.name = true;
-				}
-			});
-
-			// 전화번호 관련
-			$(".phone").on("input",function() {
-
-				// 전화번호 input 태그에 4글자 이상 입력하지 못하게 하는 이벤트
-				if ($(this).val().length > $(
-						this).prop("maxLength")) {
-					$(this).val($(this).val().slice(0,$(this).prop("maxLength")));
-				}
-
-				// 전화번호 유효성 검사
-				var regExp2 = /^\d{3,4}$/; // 숫자 3~4 글자
-				var regExp3 = /^\d{4,4}$/; // 숫자 4 글자
-
-				if (!regExp2.test($phone2.val()) || !regExp3.test($phone3.val())) {
-					$("#checkPhone").text("전화번호가 유효하지 않습니다.").css("color", "red");
-					joinCheck.phone = false;
-				} else {
-					$("#checkPhone").text("유효한 전화번호 형식입니다.")
-							.css("color","green");
-					joinCheck.phone = true;
-				}
-
-			});
-
-			// 이메일 유효성 검사
-			$email.on("input", function() {
-				var regExp = /^[\w]{4,}@[\w]+(\.[\w]+){1,3}$/;
-				if (!regExp.test($email.val())) {
-					$("#checkEmail").text("이메일 형식이 유효하지 않습니다.")
-							.css("color", "red");
-
-					joinCheck.email = false;
-
-				} else {
-					$("#checkEmail").text("유효한 형식의 이메일 입니다.")
-							.css("color", "green");
-
-					joinCheck.email = true;
-				}
-			});
-
-		});
 
 		// submit 동작
 		function validate() {

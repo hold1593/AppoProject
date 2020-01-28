@@ -16,10 +16,10 @@ import com.kh.appoproject.member.model.service.MemberService;
 import com.kh.appoproject.member.model.vo.Member;
 
 @WebServlet("/member/*")
-public class LoginServlet extends HttpServlet {
+public class MemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public LoginServlet() {
+	public MemberServlet() {
 		super();
 	}
 
@@ -104,11 +104,7 @@ public class LoginServlet extends HttpServlet {
 			}
 		}
 
-		else if (command.equals("/secession")) {
-			path = "/WEB-INF/views/member/secession.jsp";
-			view = request.getRequestDispatcher(path);
-			view.forward(request, response);
-		}
+	
 
 		else if (command.equals("/logoutForm")) {
 			request.getSession().invalidate();
@@ -159,12 +155,27 @@ public class LoginServlet extends HttpServlet {
 			}
 		}
 		else if(command.equals("/idDupCheck")) {
+			
 			String id = request.getParameter("id");
 			try {
+				System.out.println(id);
 				int result = new MemberService().idDupCheck(id);
+				
+				/*
+				request.u("result", result);
+				request.setAttribute("id", id);
+				
+				view = request.getRequestDispatcher("idDupForm");
+				
+				view.forward(request, response);
+				*/
+				
 				PrintWriter out = response.getWriter();
+				System.out.println(result);
+				
 				if(result>0) out.append("no");
 				else		out.append("yes");
+				
 			}catch(Exception e) {
 				request.setAttribute("errorMsg", "아이디 중복 확인 과정에서 오류가 발생하였습니다.");
 				e.printStackTrace();
@@ -174,6 +185,7 @@ public class LoginServlet extends HttpServlet {
 				view.forward(request,response);
 			}
 		}
+		
 		else if(command.equals("/idDupForm")) {
 			path= "/WEB-INF/views/member/idDupCheck.jsp";
 			view = request.getRequestDispatcher(path);

@@ -46,7 +46,7 @@ public class MemberService {
 	 */
 	public int idDupCheck(String id) throws Exception{
 		Connection conn = getConnection();
-		return new MemberDao().inDupCheck(conn, id);
+		return new MemberDao().idDupCheck(conn, id);
 	}
 
 }
