@@ -39,6 +39,11 @@ public class MemberService {
 		return result;
 	}
 
+	/** 아이디 중복 확인용 Service
+	 * @param id
+	 * @return result
+	 * @throws Exception
+	 */
 	public int idDupCheck(String id) throws Exception{
 		Connection conn = getConnection();
 		return new MemberDao().inDupCheck(conn, id);

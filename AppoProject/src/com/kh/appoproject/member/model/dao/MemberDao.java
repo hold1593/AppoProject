@@ -10,10 +10,6 @@ import static com.kh.appoproject.common.JDBCTemplate.*;
 
 import com.kh.appoproject.member.model.vo.Member;
 
-/**
- * @author 82102
- *
- */
 public class MemberDao {
 
 	private Properties prop = null;
