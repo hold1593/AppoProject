@@ -24,7 +24,7 @@ public class EncryptWrapper extends HttpServletRequestWrapper {
 		// 요청 데이터의 key에 대응되는 value를 저장할 변수 선언
 		String value = "";
 
-		if (key != null && (key.equals("memberPwd") || key.equals("pwd1") || key.equals("newPwd1")
+		if (key != null && (key.equals("member_Pwd") || key.equals("pwd1") || key.equals("newPwd1")
 				|| key.equals("currentPwd"))) {
 			// 암호화 진행 -> SHA-512 해시함수 암호화
 			// 해시함수란?

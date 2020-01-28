@@ -146,32 +146,35 @@ public class MemberServlet extends HttpServlet {
 			try {
 
 				int result = new MemberService().join(member);
-
-				path = "/WEB-INF/views/common/errorPage.jsp";
+				
+				//response.sendRedirect(request.getContextPath());
+				
+				path = "/WEB-INF/views/member/memberJoinSuccess.jsp";
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
 
 			} catch (Exception e) {
+				
 				request.setAttribute("errorMsg", "회원가입 과정에서 오류가 발생 하였습니다.");
 				e.printStackTrace();
+				
+				path = "/WEB-INF/views/common/errorPage.jsp";
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+				
 			}
+			
+			
+			
 		}
 		else if(command.equals("/idDupCheck")) {
 			
 			String id = request.getParameter("id");
 			try {
-				System.out.println(id);
+	
 				int result = new MemberService().idDupCheck(id);
 				
-				/*
-				request.u("result", result);
-				request.setAttribute("id", id);
-				
-				view = request.getRequestDispatcher("idDupForm");
-				
-				view.forward(request, response);
-				*/
-				
 				PrintWriter out = response.getWriter();
-				System.out.println(result);
 				
 				if(result>0) out.append("no");
 				else		out.append("yes");
@@ -191,6 +194,14 @@ public class MemberServlet extends HttpServlet {
 			view = request.getRequestDispatcher(path);
 			view.forward(request, response);
 		}
+		
+		// 로그인 성공시 넘어가는 화면
+		/*else if(command.equals("/loginSuccess")) {
+
+			path = "/WEB-INF/views/member/memberJoinSuccess.jsp";
+			view = request.getRequestDispatcher(path);
+			view.forward(request, response);
+		}*/
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -42,13 +42,12 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 	<div id="container" class="container">
 
-		<form class="" onsubmit="return validate();" name="memberJoin"
-			action="join">
+		<form class="needs-validation" onsubmit="return validate();" name="memberJoin" action="join" method="POST">
 
 			<div class="mb-3">
 				<label for="id">아이디</label>
 					<input type="text" class="form-control" name="id" id="id"
-						placeholder="영어 소문자, 숫자 총 6~12글자" maxlength="12">
+						placeholder="영어 소문자, 숫자 총 6~12글자" maxlength="12" required>
 						
 			<div><span id="checkId">&nbsp;</span></div>
 			
@@ -57,28 +56,27 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 			
 
 			<div class="mb-3">
-				<label for="pwd1">비밀번호</label> <input type="text"
-					class="form-control" name="pwd1" id="pwd1"
-					placeholder="영문 대/소문자, 숫자 총 8~20자" required>
+				<label for="pwd1">비밀번호</label> 
+				<input type="password" class="form-control" name="pwd1" id="pwd1" placeholder="영문 대/소문자, 숫자 총 8~20자" required>
+				<div><span id="checkPwd1">&nbsp;</span></div>
+			
+			</div>
+
+			<div class="mb-3">
+				<label for="pwd2">비밀번호 재확인</label> 
+				<input type="password" class="form-control" name="pwd2" id="pwd2" placeholder="비밀번호를 다시한번 입력해주세요." required>
+				<div><span id="checkPwd2">&nbsp;</span></div>
+			</div>
+
+			<div class="mb-3">
+				<label for="name">이름</label> 
+				<input type="text" class="form-control" name="name" id="name" placeholder="이름을 입력해주세요." required>
 			</div>
 
 
 			<div class="mb-3">
-				<label for="pwd2">비밀번호 재확인</label> <input type="text"
-					class="form-control" name="pwd2" id="pwd1"
-					placeholder="비밀번호를 다시한번 입력해주세요." required>
-			</div>
-
-			<div class="mb-3">
-				<label for="name">이름</label> <input type="text" class="form-control"
-					name="name" id="name" placeholder="이름을 입력해주세요." required>
-			</div>
-
-
-			<div class="mb-3">
-				<label for="email">이메일</label> <input type="email"
-					class="form-control" name="email" id="email"
-					placeholder="이메일을 입력해주세요.">
+				<label for="email">이메일</label> 
+				<input type="email" class="form-control" name="email" id="email" placeholder="이메일을 입력해주세요.">
 			</div>
 
 
@@ -88,8 +86,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 				<div class="col-md-4 mb-3">
 
 					<select class="custom-select d-block w-100" name="phone1" required>
-						<option value="">010</option>
-						<option>011</option>
+						<option value="">선택</option>
+						<option>010</option>
 						<option>016</option>
 						<option>016</option>
 						<option>070</option>
@@ -160,8 +158,9 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 				<div class="col-md-4 mb-3">
 
 					<select class="custom-select d-block w-100" name="bank" required>
-						<option value="">국민은행</option>
+						<option value="">은행 선택</option>
 						<option>우리은행</option>
+						<option>국민은행</option>
 						<option>하나은행</option>
 						<option>카카오뱅크</option>
 						<option>외환은행</option>
@@ -171,14 +170,13 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 				</div>
 
 				<div class="col-md-8 mb-3">
-					<input type="number" class="form-control" name="accNo" id="accNo"
+					<input type="text" class="form-control" name="accNo" id="accNo"
 						placeholder="'-' 를 포함하여 주십시오" required>
 				</div>
 			</div>
 
 			<hr class="mb-4">
-			<button class="btn btn-primary btn-lg btn-block" type="submit">가입
-				완료</button>
+			<button class="btn btn-primary btn-lg btn-block" type="submit">가입 완료</button>
 
 			<div class="my-5 pt-5 text-muted text-center text-small">
 				<p class="mb-1">&copy; APPO INC.ALL RIGHTS RESERVED.</p>
@@ -201,8 +199,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 			"pwd2" : false,
 			"name" : false,
 			"phone" : false,
-			"email" : false,
-			"accNo" : false,
+			"email" : false
 		};
 
 		$(document).ready(function() {
@@ -221,14 +218,11 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 				$id.on("input", function() {
 					var regExp = /^[a-zA-z\d]{6,12}$/;
 					if (!regExp.test($id.val())) {
-						$("#checkId").text("아이디가 형식에 맞지 않습니다.")
-								.css("color", "red");
-				
+						$("#checkId").text("유효하지 않은 형식의 아이디 입니다.").css("color", "red");
+						$("#id").css("border-color", "red");
 						joinCheck.id = false;
 
 					} else {
-						$("#checkId").text("유효한 형식의 아이디 입니다.").css(
-								"color", "green");
 						joinCheck.id = true;
 						
 						$.ajax({
@@ -239,13 +233,13 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 							type : "GET",
 							success : function(result) {
 								if (result == "yes") {
-									$("#checkId").text("사용가능한 아이디 입니다.")
-									.css("color", "green");
+									$("#checkId").text("사용가능한 아이디 입니다.").css("color", "green");
+									$("#id").css("border-color", "green");
 									
 									joinCheck.idDup=true;
 								}else{
-									$("#checkId").text("사용할 수 없는 아이디 입니다.")
-									.css("color", "red");
+									$("#checkId").text("사용할 수 없는 아이디 입니다.").css("color", "red");
+									$("#id").css("border-color", "red");
 									
 									joinCheck.idDup=false;
 								}
@@ -269,30 +263,42 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 					var regExp = /^[a-zA-z\d]{8,20}$/;
 
 					if (!regExp.test($pwd1.val())) {
+						$("#checkPwd1").text("유효하지 않은 형식의 비밀번호 입니다.").css("color", "red");
 						$("#pwd1").css("border-color", "red");
+						
 						joinCheck.pwd1 = false;
 
 					} else {
+						$("#checkPwd1").text("사용가능한 비밀번호 입니다.").css("color", "green");
 						$("#pwd1").css("border-color", "green");
 						joinCheck.pwd1 = true;
 					}
 				});
 
+				// 비번 확인
 				$pwd2.on("input", function() {
+					
 					if ($pwd1.val().trim() != $pwd2.val().trim()) {
+						
+						$("#checkPwd2").text("비밀번호가 일치하지 않습니다.").css("color", "red");
 						$("#pwd2").css("border-color", "red");
 						joinCheck.pwd2 = false;
+						
 					} else {
+						$("#checkPwd2").text("비밀번호가 일치합니다.").css("color", "green");
 						$("#pwd2").css("border-color", "green");
 						joinCheck.pwd2 = true;
 					}
 				});
 
+				// 이름
 				$name.on("input", function() {
 					var regExp = /^[가-힣]{2,}$/;
 					if (!regExp.test($(this).val())) {
+						$("#name").css("border-color", "red");
 						joinCheck.name = false;
 					} else {
+						$("#name").css("border-color", "green");
 						joinCheck.name = true;
 					}
 				});
@@ -312,28 +318,19 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 					if (!regExp2
 							.test($phone2.val())) {
-						$("#phone2").css(
-								"border-color",
-								"red");
+						$("#phone2").css("border-color","red");
 						joinCheck.phone = false;
 						
 					} else {
-						$("#phone2").css(
-								"border-color",
-								"green");
+						$("#phone2").css("border-color","green");
 						joinCheck.phone = true;
 					}
 
-					if (!regExp3
-							.test($phone3.val())) {
-						$("#phone3").css(
-								"border-color",
-								"red");
+					if (!regExp3.test($phone3.val())) {
+						$("#phone3").css("border-color","red");
 						joinCheck.phone = false;
 					} else {
-						$("#phone3").css(
-								"border-color",
-								"green");
+						$("#phone3").css("border-color","green");
 						joinCheck.phone = true;
 					}
 
@@ -351,17 +348,13 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 						joinCheck.email = true;
 					}
 				});
+				
+			
 
 			});
 
 		// submit 동작
 		function validate() {
-
-			// 아이디 중복 검사 결과
-			if ($("#idDup").val() == "true")
-				joinCheck.idDup = true;
-			else
-				joinCheck.idDup = false;
 
 			for ( var key in joinCheck) {
 				if (!joinCheck[key]) {

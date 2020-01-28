@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.kh.appoproject.wrapper.EncryptWrapper;
 
 
-@WebFilter(urlPatterns = {"/member/login.do","/member/signUp.do"
-		,"/member/updatePwd.do","/member/deleteMember.do"})
+@WebFilter(urlPatterns = {"/member/login","/member/join"
+		,"/member/updatePwd","/member/deleteMember"})
 public class EncryptFilter implements Filter {
 
   

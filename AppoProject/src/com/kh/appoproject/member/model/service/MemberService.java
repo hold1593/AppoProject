@@ -46,7 +46,11 @@ public class MemberService {
 	 */
 	public int idDupCheck(String id) throws Exception{
 		Connection conn = getConnection();
-		return new MemberDao().idDupCheck(conn, id);
+		
+		int result = new MemberDao().idDupCheck(conn, id);
+		
+		close(conn);
+		return result;
 	}
 
 }

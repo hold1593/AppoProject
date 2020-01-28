@@ -11,7 +11,6 @@
 </head>
 <body>
 
-	<div>
 		<%@ include file="../common/header.jsp"%>
 		<%@ include file="../common/nav.jsp"%>
 
@@ -39,7 +38,7 @@
 
 		</div>
 		<%@ include file="../common/footer.jsp"%>
-	</div>
+
 
 
 

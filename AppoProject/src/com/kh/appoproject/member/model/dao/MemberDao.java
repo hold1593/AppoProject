@@ -113,39 +113,6 @@ public class MemberDao {
 		return result;
 	}
 	
-	/** 회원가입용 Dao
-	 * @param conn
-	 * @param member
-	 * @return result
-	 * @throws Exception
-	 */
-	public int signUp(Connection conn, Member member) throws Exception {
-		
-		PreparedStatement pstmt = null;
-		int result = 0;
-		
-		String query = prop.getProperty("signUp");
-		
-		try {
-			
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, member.getMember_Id());
-			pstmt.setString(2, member.getMember_Pwd());
-			pstmt.setString(3, member.getMember_NM());
-			pstmt.setString(4, member.getMember_Phone());
-			pstmt.setString(5, member.getMember_Email());
-			pstmt.setString(6, member.getMember_Address());
-		
-			
-			result = pstmt.executeUpdate();
-			
-		} finally {
-			
-			close(pstmt);
-		}
-		
-		return result;
-	}
 
 	/** 회원가입용 Dao
 	 * @param conn
