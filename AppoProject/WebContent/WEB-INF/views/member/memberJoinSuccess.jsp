@@ -11,34 +11,35 @@
 </head>
 <body>
 
-		<%@ include file="../common/header.jsp"%>
-		<%@ include file="../common/nav.jsp"%>
+	<%@ include file="../common/header.jsp"%>
+	<%@ include file="../common/nav.jsp"%>
 
-		<div class="container">
+	<div class="container" id="conarea">
 
-			<!-- content -->
-			<div class="row">
-				<div class="col-md-12">
-					<div class="row">
-						<div class="col-md-12 text-center">
-							<h4>
-								<strong>회원가입이 정상적으로 완료되었습니다.</strong>
-							</h4>
-						</div>
-					</div>
-					<br>
-					<div class="row mt-3">
-						<div class="col-md-12">
-							<button class="btn btn-primary btn-block" type="submit">로그인</button>
-							<button class="btn btn-info btn-block" type="submit">Home</button>
-						</div>
-					</div>
-				</div>
+		<div class="row">
+			<div class="col-md-12 text-center">
+
+				<h4>
+					<strong>회원가입이 정상적으로 완료되었습니다.</strong>
+				</h4>
+
 			</div>
-
 		</div>
-		<%@ include file="../common/footer.jsp"%>
 
+		<br>
+
+		<div class="row mt-3">
+			<div class="col-md-12">
+				<button class="btn btn-primary btn-block" type="submit">로그인</button>
+				<button class="btn btn-info btn-block" type="submit">Home</button>
+			</div>
+		</div>
+		
+	</div>
+	
+	<div>
+	<%@ include file="../common/footer.jsp"%>
+	</div>
 
 
 

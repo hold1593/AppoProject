@@ -26,3 +26,9 @@
 	width: 78% !important;
 }
 */
+
+#conarea{
+  height: 500px;
+  width: auto;
+  margin-top: 150px;
+}

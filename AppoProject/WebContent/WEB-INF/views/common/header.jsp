@@ -58,9 +58,8 @@
 				<nav class="site-header sticky-top py-1">
 	
 	
-					<div
-						class="container d-flex flex-column flex-md-row justify-content-between">
-						<a class="py-2" href="<%=request.getContextPath() %>/member/main.jsp" aria-label="Product"> 
+					<div class="container d-flex flex-column flex-md-row justify-content-between">
+						<a class="py-2" href="<%=request.getContextPath() %>" aria-label="Product"> 
 						<img src="<%=request.getContextPath() %>/resources/appoimg/appologo_final.png" width="24" height="auto"
 							fill="none" stroke="currentColor" stroke-linecap="round"
 							stroke-linejoin="round" stroke-width="2" role="img"
