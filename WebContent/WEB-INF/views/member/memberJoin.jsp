@@ -88,7 +88,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 					<select class="custom-select d-block w-100" name="phone1" required>
 						<option value="">선택</option>
 						<option>010</option>
-						<option>016</option>
+						<option>011</option>
 						<option>016</option>
 						<option>070</option>
 						<option>019</option>

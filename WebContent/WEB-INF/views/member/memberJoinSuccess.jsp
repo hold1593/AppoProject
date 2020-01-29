@@ -30,8 +30,8 @@
 
 		<div class="row mt-3">
 			<div class="col-md-12">
-				<button class="btn btn-primary btn-block" type="submit">로그인</button>
-				<button class="btn btn-info btn-block" type="submit">Home</button>
+				<button class="btn btn-primary btn-block" type="button" onclick="location.href='<%=request.getContextPath()%>/member/loginForm'">로그인</button>
+				<button class="btn btn-info btn-block" type="button" onclick="location.href='<%=request.getContextPath()%>'">Home</button>
 			</div>
 		</div>
 		
