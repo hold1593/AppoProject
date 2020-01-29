@@ -201,6 +201,23 @@ public class MemberServlet extends HttpServlet {
 			view.forward(request, response);
 		
 		}
+		
+		else if (command.equals("/Findacc")) {
+
+			path = "/WEB-INF/views/member/memberFindIdPwd.jsp";
+			view = request.getRequestDispatcher(path);
+			view.forward(request, response);
+		}
+		
+		// 아이디 찾기 
+		
+		else if (command.equals("/FindId")) {
+
+	
+			
+			
+		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

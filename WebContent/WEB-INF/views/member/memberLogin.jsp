@@ -50,7 +50,7 @@
 
 					<div class="text-center">
 						<br> 
-						<a href="#">아이디 / 비밀번호 찾기</a>
+						<a href="<%=request.getContextPath()%>/member/Findacc">아이디 / 비밀번호 찾기</a>
 						<br> 
 						<a href="<%=request.getContextPath()%>/member/joinForm">회원가입</a>
 					</div>
