@@ -111,6 +111,11 @@ public class MemberServlet extends HttpServlet {
 			response.sendRedirect(request.getHeader("referer"));
 		}
 
+		else if(command.equals("/agreeForm")) {
+			path = "/WEB-INF/views/member/memberAgree.jsp";
+			view = request.getRequestDispatcher(path);
+			view.forward(request, response);
+		}
 		
 		
 		else if (command.equals("/joinForm")) {

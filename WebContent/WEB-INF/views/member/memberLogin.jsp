@@ -52,7 +52,7 @@
 						<br> 
 						<a href="<%=request.getContextPath()%>/member/Findacc">아이디 / 비밀번호 찾기</a>
 						<br> 
-						<a href="<%=request.getContextPath()%>/member/joinForm">회원가입</a>
+						<a href="<%=request.getContextPath()%>/member/agreeForm">회원가입</a>
 					</div>
 
 					<p class="mt-5 mb-3 text-muted small text-center">&copy; Appo
