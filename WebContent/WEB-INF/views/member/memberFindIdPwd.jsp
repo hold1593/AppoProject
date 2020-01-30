@@ -46,24 +46,25 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 						<h4 class="mb-4">아이디 찾기</h4>
 
 						<div>
-							<label for="inputName">이름</label> 
-							<input type="text" id="inputName" name="inputName" class="form-control"
+							<label for="inputName">이름</label> <input type="text"
+								id="inputName" name="inputName" class="form-control"
 								placeholder="이름을 입력해주세요." required>
 						</div>
 
 						<div class="radio-e-ph mt-3">
-							<input type="radio" id="e_radio" name="findIdRadio" onclick="setDisplay_em()" checked> 
-							<label for="e_radio">&nbsp;&nbsp;이메일</label>
+							<input type="radio" id="e_radio" name="findIdRadio"
+								onclick="setDisplay_em()" checked> <label for="e_radio">&nbsp;&nbsp;이메일</label>
 						</div>
 
 						<div class="radio-e-ph">
-							<input type="radio" id="ph_radio" name="findIdRadio" onclick="setDisplay_ph()"> 
-							<label for="ph_radio">&nbsp;&nbsp;휴대폰</label>
+							<input type="radio" id="ph_radio" name="findIdRadio"
+								onclick="setDisplay_ph()"> <label for="ph_radio">&nbsp;&nbsp;휴대폰</label>
 						</div>
 
 						<div id="email_div">
-							<label for="inputEmail" class="em mt-3">이메일</label> 
-							<input type="email" id="inputEmail" class="form-control mb-3" placeholder="이메일을 입력해주세요.">
+							<label for="inputEmail" class="em mt-3">이메일</label> <input
+								type="email" id="inputEmail" name="inputEmail"
+								class="form-control mb-3" placeholder="이메일을 입력해주세요.">
 						</div>
 
 
@@ -74,10 +75,10 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 								<div class="col-md-4 mb-3">
 									<select class="custom-select d-block w-100 form-control"
-										name="phone1" id="phone1" required>
-										<option value="010">010</option>
+										name="phone1" id="phone1">
+										<option value="">선택</option>
+										<option>010</option>
 										<option>011</option>
-										<option>016</option>
 										<option>016</option>
 										<option>070</option>
 										<option>019</option>
@@ -93,11 +94,13 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 									<input type="number" class="form-control phone" name="phone3"
 										id="phone3" maxlength="4">
 								</div>
+								
+								<input type="hidden" name="hide" id="hide" value="1">
 
 							</div>
 						</div>
 						<div align="right">
-						<button class="btn btn-primary" type="submit">아이디 찾기</button>
+							<button class="btn btn-primary" type="submit">아이디 찾기</button>
 						</div>
 					</div>
 				</form>
@@ -110,8 +113,9 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 			<div class="col-md-6">
 
 
-				<form class="form-signin" action="" method="POST" name="FindPwdForm" onsubmit="return validate2();">
-				
+				<form class="form-signin" action="FindPwd" method="POST" name="FindPwdForm"
+					onsubmit="return validate2();">
+
 					<div class="findbox">
 						<h4 class="mb-4">비밀번호 찾기</h4>
 
@@ -122,19 +126,21 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 						</div>
 
 						<div>
-							<label for="inputName2" class="inputName2 mt-2">이름</label> 
-							<input type="text" id="inputName2" name="inputName2" class="form-control" placeholder="이름을 입력해주세요." required>
+							<label for="inputName2" class="inputName2 mt-2">이름</label> <input
+								type="text" id="inputName2" name="inputName2"
+								class="form-control" placeholder="이름을 입력해주세요." required>
 						</div>
 
 						<div>
 							<label for="inputEmail2" class="inputEmail2 mt-2">이메일</label> 
-							<input type="email" id="inputEmail2" class="form-control mb-3" placeholder="이메일을 입력해주세요." required>
+							<input type="email" id="inputEmail2" class="form-control mb-3"
+								placeholder="이메일을 입력해주세요." required>
 						</div>
-						
+
 						<div align="right">
-						<button class="btn btn-primary" type="submit">비밀번호 찾기</button>
+							<button class="btn btn-primary" type="submit">비밀번호 찾기</button>
 						</div>
-						
+
 					</div>
 				</form>
 			</div>
@@ -143,7 +149,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 	</div>
 
 	<div>
-		<%@ include file="../common/footer.jsp"%>
+		<%@ include file="../common/footer.jsp"%> 
 	</div>
 
 
@@ -155,6 +161,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 			$("#phone_div").hide();
 			FindIdCheck1.phone = true;
 			FindIdCheck1.email = false;
+			
+			$("input[type=hidden][name=hide]").val("1");
 		};
 
 		function setDisplay_ph() {
@@ -162,6 +170,9 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 			$("#phone_div").show();
 			FindIdCheck1.phone = false;
 			FindIdCheck1.email = true;
+			
+			$("input[type=hidden][name=hide]").val("2");
+
 		};
 
 		var FindIdCheck1 = {
@@ -222,13 +233,9 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 				//alert("빈 칸을 모두 작성해주세요.");
 				return false;
 			}
-		}
 
-		var FindIdCheck2 = {
-			"id" : false,
-			"name" : false,
-			"email" : false
-		};
+
+		}
 
 		function validate2() {
 

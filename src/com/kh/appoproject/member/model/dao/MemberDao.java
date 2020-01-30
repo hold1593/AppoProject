@@ -1,12 +1,13 @@
 package com.kh.appoproject.member.model.dao;
 
+import static com.kh.appoproject.common.JDBCTemplate.*;
+
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
-import static com.kh.appoproject.common.JDBCTemplate.*;
 
 import com.kh.appoproject.member.model.vo.Member;
 
@@ -112,24 +113,25 @@ public class MemberDao {
 		}
 		return result;
 	}
-	
 
-	/** 회원가입용 Dao
+	/**
+	 * 회원가입용 Dao
+	 * 
 	 * @param conn
 	 * @param member
 	 * @return result
 	 * @throws Exception
 	 */
-	public int join(Connection conn, Member member) throws Exception{
-		
+	public int join(Connection conn, Member member) throws Exception {
+
 		PreparedStatement pstmt = null;
 		int result = 0;
-		
+
 		String query = prop.getProperty("join");
-		
+
 		try {
 			pstmt = conn.prepareStatement(query);
-			
+
 			pstmt.setString(1, member.getMember_Id());
 			pstmt.setString(2, member.getMember_Pwd());
 			pstmt.setString(3, member.getMember_NM());
@@ -137,15 +139,107 @@ public class MemberDao {
 			pstmt.setString(5, member.getMember_Email());
 			pstmt.setString(6, member.getMember_Address());
 			pstmt.setString(7, member.getMember_Account());
-			
+
 			result = pstmt.executeUpdate();
-			
-		}finally {
+
+		} finally {
 			close(pstmt);
 		}
-		
+
 		return result;
 	}
 
+	/**
+	 * 아이디찾기용 DAo
+	 * 
+	 * @param conn
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public String FindIdEm(Connection conn, Member member) throws Exception {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String member_Id = null;
+
+		String query = prop.getProperty("findIdEmail");
+
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, member.getMember_NM());
+			pstmt.setString(2, member.getMember_Email());
+
+			rset = pstmt.executeQuery();
+
+			while (rset.next()) {
+				member_Id = rset.getString("MEMBER_ID");
+			}
+
+		} finally {
+
+			close(rset);
+			close(pstmt);
+
+		}
+		return member_Id;
+	}
+
+	public String FindIdPh(Connection conn, Member member) throws Exception {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String member_Id = null;
+
+		String query = prop.getProperty("findIdPhone");
+
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, member.getMember_NM());
+			pstmt.setString(2, member.getMember_Phone());
+
+			rset = pstmt.executeQuery();
+
+			while (rset.next()) {
+				member_Id = rset.getString("MEMBER_ID");
+			}
+
+		} finally {
+
+			close(rset);
+			close(pstmt);
+
+		}
+		System.out.println(member_Id);
+		return member_Id;
+	}
+
+	public String FindIdPwd(Connection conn, Member member) throws Exception {
+
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String memberId = null;
+
+		String query = prop.getProperty("findPwd");
+
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, member.getMember_Id());
+			pstmt.setString(2, member.getMember_NM());
+			pstmt.setString(3, member.getMember_Email());
+
+			rset = pstmt.executeQuery();
+
+			while (rset.next()) {
+				memberId = rset.getString("MEMBER_ID");
+			}
+
+
+		} finally {
+			close(rset);
+			close(pstmt);
+
+		}
+		return memberId;
+	}
 
 }

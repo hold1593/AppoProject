@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+<%
+String member_Id = (String)request.getAttribute("member_Id");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +32,7 @@
 				<form class="form-signin_1" action="loginForm" method="POST" name="FindPwd" onsubmit="return validate();">
 
 					<h5 class="font-weight-bold text-center">
-						회원님께서 찾고자 하는 아이디는<span class="findid"> nonebdh </span>입니다.
+						회원님께서 찾고자 하는 아이디는<span class="member_Id"><%=member_Id%></span>입니다.
 					</h5>
 
 					<div align="right">

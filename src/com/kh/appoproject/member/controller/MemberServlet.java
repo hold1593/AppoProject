@@ -2,7 +2,6 @@ package com.kh.appoproject.member.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -56,7 +55,7 @@ public class MemberServlet extends HttpServlet {
 			Member member = new Member(memberId, memberPwd);
 
 			try {
-				Member loginMember = new MemberService().loginMember(member);
+				Member loginMember = memberService.loginMember(member);
 
 				System.out.println("loginMember : " + loginMember);
 
@@ -104,20 +103,17 @@ public class MemberServlet extends HttpServlet {
 			}
 		}
 
-	
-
 		else if (command.equals("/logoutForm")) {
 			request.getSession().invalidate();
 			response.sendRedirect(request.getHeader("referer"));
 		}
 
-		else if(command.equals("/agreeForm")) {
+		else if (command.equals("/agreeForm")) {
 			path = "/WEB-INF/views/member/memberAgree.jsp";
 			view = request.getRequestDispatcher(path);
 			view.forward(request, response);
 		}
-		
-		
+
 		else if (command.equals("/joinForm")) {
 
 			path = "/WEB-INF/views/member/memberJoin.jsp";
@@ -150,79 +146,171 @@ public class MemberServlet extends HttpServlet {
 
 			try {
 
-				int result = new MemberService().join(member);
-				
-				//response.sendRedirect(request.getContextPath());
-				
+				int result = memberService.join(member);
+
+				// response.sendRedirect(request.getContextPath());
+
 				response.sendRedirect("joinSuccess");
-				
+
 			} catch (Exception e) {
-				
+
 				request.setAttribute("errorMsg", "회원가입 과정에서 오류가 발생 하였습니다.");
 				e.printStackTrace();
-				
+
 				path = "/WEB-INF/views/common/errorPage.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
-				
+
 			}
-			
-			
-			
-		}
-		else if(command.equals("/idDupCheck")) {
-			
+
+		} else if (command.equals("/idDupCheck")) {
+
 			String id = request.getParameter("id");
 			try {
-	
-				int result = new MemberService().idDupCheck(id);
-				
+
+				int result = memberService.idDupCheck(id);
+
 				PrintWriter out = response.getWriter();
-				
-				if(result>0) out.append("no");
-				else		out.append("yes");
-				
-			}catch(Exception e) {
+
+				if (result > 0)
+					out.append("no");
+				else
+					out.append("yes");
+
+			} catch (Exception e) {
 				request.setAttribute("errorMsg", "아이디 중복 확인 과정에서 오류가 발생하였습니다.");
 				e.printStackTrace();
-				
-				path="/WEB-INF/views/common/errorPage.jsp";
+
+				path = "/WEB-INF/views/common/errorPage.jsp";
 				view = request.getRequestDispatcher(path);
-				view.forward(request,response);
+				view.forward(request, response);
 			}
 		}
-		
-		else if(command.equals("/idDupForm")) {
-			path= "/WEB-INF/views/member/idDupCheck.jsp";
+
+		else if (command.equals("/idDupForm")) {
+			path = "/WEB-INF/views/member/idDupCheck.jsp";
 			view = request.getRequestDispatcher(path);
 			view.forward(request, response);
 		}
-		
-		
-		else if(command.equals("/joinSuccess")) {
+
+		else if (command.equals("/joinSuccess")) {
 
 			path = "/WEB-INF/views/member/memberJoinSuccess.jsp";
 			view = request.getRequestDispatcher(path);
 			view.forward(request, response);
-		
+
 		}
-		
+
 		else if (command.equals("/Findacc")) {
 
 			path = "/WEB-INF/views/member/memberFindIdPwd.jsp";
 			view = request.getRequestDispatcher(path);
 			view.forward(request, response);
 		}
-		
-		// 아이디 찾기 
-		
-		else if (command.equals("/FindId")) {
 
-	
+		// 아이디 찾기
+
+		else if (command.equals("/FindId")) {
+			
+
+			String hidden = request.getParameter("hide");
+
+			System.out.println(hidden);
 			
 			
+
+			if (hidden.equals("1")) { // 이메일로 인증할때
+
+				String member_NM = request.getParameter("inputName");
+				String member_Email = request.getParameter("inputEmail");
+
+				Member member = new Member();
+
+				member.setMember_NM(member_NM);
+				member.setMember_Email(member_Email);
+				
+				
+
+				try {
+
+					String member_Id = memberService.FindIdEm(member);
+
+					request.setAttribute("member_Id", member_Id);
+					path = "/WEB-INF/views/member/memberFindIdResult.jsp";
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+
+				} catch (Exception e) {
+
+					request.setAttribute("errorMsg", "아이디 찾기 과정에서 오류가 발생 하였습니다.");
+					e.printStackTrace();
+
+					path = "/WEB-INF/views/common/errorPage.jsp";
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+				}
+
+			} else if (hidden.equals("2")) {
+				
+				String member_NM = request.getParameter("inputName");
+				String member_Phone = request.getParameter("phone1") + "-" + request.getParameter("phone2") + "-"
+						+ request.getParameter("phone3");
+			
+
+				Member member = new Member();
+
+				member.setMember_NM(member_NM);
+				member.setMember_Phone(member_Phone);
+
+				try {
+
+					String member_Id = memberService.FindIdPh(member);
+					
+					request.setAttribute("member_Id", member_Id);
+					path = "/WEB-INF/views/member/memberFindIdResult.jsp";
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+					
+
+				} catch (Exception e) {
+
+					request.setAttribute("errorMsg", "아이디 찾기 과정에서 오류가 발생 하였습니다.");
+					e.printStackTrace();
+
+					path = "/WEB-INF/views/common/errorPage.jsp";
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+				}
+
+			}
+
 		}
-		
+
+		else if (command.equals("/FindPwd")) {
+			String member_Id = request.getParameter("inputId");
+			String member_NM = request.getParameter("inputName2");
+			String member_Email = request.getParameter("inputEmail2");
+
+			Member member = new Member(member_Id, member_NM, member_Email);
+
+			try {
+				String memberId = memberService.FindPwd(member);
+
+				response.sendRedirect("FindPwdChange");
+
+			}
+
+			catch (Exception e) {
+
+				request.setAttribute("errorMsg", "비밀번호 찾기 중 오류가 발생 하였습니다.");
+				e.printStackTrace();
+
+				path = "/WEB-INF/views/common/errorPage.jsp";
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

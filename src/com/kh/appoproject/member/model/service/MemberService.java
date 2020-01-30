@@ -53,4 +53,32 @@ public class MemberService {
 		return result;
 	}
 
+	/** 아이디 찾기용 Service
+	 * @param member
+	 * @return
+	 * @throws Exception
+	 */
+	public String FindIdEm(Member member) throws Exception{
+		
+		Connection conn = getConnection();
+		String member_Id = new MemberDao().FindIdEm(conn,member);
+		close(conn);
+		return member_Id;
+	}
+
+	public String FindIdPh(Member member) throws Exception{
+		Connection conn = getConnection();
+		String member_Id = new MemberDao().FindIdPh(conn,member);
+		close(conn);
+		return member_Id;
+	}
+
+	public String FindPwd(Member member) throws Exception{
+		Connection conn = getConnection();
+		String memberId = new MemberDao().FindIdPwd(conn,member);
+		close(conn);
+		return memberId;
+	}
+
+
 }

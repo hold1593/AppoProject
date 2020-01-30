@@ -34,7 +34,7 @@ public class Member {
 		this.member_Address = member_Address;
 	}
 	
-	public Member(String member_Id, String member_Pwd) {
+	public Member(String member_Id, String member_Pwd){
 		super();
 		this.member_Id = member_Id;
 		this.member_Pwd = member_Pwd;
@@ -51,6 +51,14 @@ public class Member {
 		this.member_Email = member_Email;
 		this.member_Account = member_Account;
 		this.member_Address = member_Address;
+	}
+	
+
+	public Member(String member_Id, String member_NM, String member_Email) {
+		super();
+		this.member_Id = member_Id;
+		this.member_NM = member_NM;
+		this.member_Email = member_Email;
 	}
 
 	public int getMember_No() {
