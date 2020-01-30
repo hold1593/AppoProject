@@ -32,13 +32,14 @@ String member_Id = (String)request.getAttribute("member_Id");
 				<form class="form-signin_1" action="loginForm" method="POST" name="FindPwd" onsubmit="return validate();">
 
 					<h5 class="font-weight-bold text-center">
-						회원님께서 찾고자 하는 아이디는<span class="member_Id"><%=member_Id%></span>입니다.
+						회원님께서 찾고자 하는 아이디는<span class="member_Id">&nbsp;<%=member_Id%>&nbsp;</span>입니다.
 					</h5>
 
 					<div align="right">
 						<button class="mt-3 mb-3 btn btn-primary" type="submit">로그인</button>
 						
-						<button class="mr-3 mt-3 mb-3 btn btn-info" type="button" onclick="validate();">비밀번호 찾기</button>
+						<button class="mr-3 mt-3 mb-3 btn btn-info" type="button" 
+						onclick="location.href='<%=request.getHeader("referer")%>'">비밀번호 찾기</button>
 					</div>
 
 				</form>

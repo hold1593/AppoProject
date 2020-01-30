@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%
+	String memberId = (String) request.getAttribute("memberId");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +19,7 @@
 	<div class="container" id="conarea">
 
 		<div class="mb-5">
-			<h2 class="font-weight-bold">비밀번호 찾기</h2>
+			<h2 class="font-weight-bold text-center">비밀번호 찾기</h2>
 		</div>
 
 
@@ -23,8 +27,9 @@
 			<div class="col-md-12">
 
 
-				<form class="form-signin p-5" action="FindPwdChange" method="POST" name="FindPwd" onsubmit="return validate();">
-				
+				<form class="form-signin p-5" action="FindPwdChange" method="POST"
+					name="FindPwd" onsubmit="return validate();">
+
 					<h4 class="mb-5 font-weight-bold text-center">새로운 비밀번호 지정</h4>
 
 					<div class="center-block">
@@ -42,16 +47,16 @@
 							placeholder="새로운 비밀번호를 재확인해주세요." required>
 					</div>
 
-					<button class="pull-right btn btn-primary" type="submit">확인</button>
-					<button class="backbutton mr-3 pull-right btn btn-default"
-						type="reset">이전</button>
-
+					<div align="right">
+						<button class="btn mr-3btn btn-info" type="reset">이전</button>
+						<button class="btn btn-primary" type="submit">확인</button>
+					</div>
 				</form>
 
 			</div>
 		</div>
 	</div>
-	
+
 	<div>
 		<%@ include file="../common/footer.jsp"%>
 	</div>

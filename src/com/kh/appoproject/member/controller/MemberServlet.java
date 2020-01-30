@@ -2,6 +2,7 @@ package com.kh.appoproject.member.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -215,9 +216,6 @@ public class MemberServlet extends HttpServlet {
 
 			String hidden = request.getParameter("hide");
 
-			System.out.println(hidden);
-			
-			
 
 			if (hidden.equals("1")) { // 이메일로 인증할때
 
@@ -229,17 +227,27 @@ public class MemberServlet extends HttpServlet {
 				member.setMember_NM(member_NM);
 				member.setMember_Email(member_Email);
 				
-				
-
 				try {
-
+					
 					String member_Id = memberService.FindIdEm(member);
-
-					request.setAttribute("member_Id", member_Id);
-					path = "/WEB-INF/views/member/memberFindIdResult.jsp";
-					view = request.getRequestDispatcher(path);
-					view.forward(request, response);
-
+					
+					PrintWriter out = response.getWriter();
+					
+					System.out.println(member_Id);
+					
+					if(member_Id != null) {
+						request.setAttribute("member_Id", member_Id);
+						path = "/WEB-INF/views/member/memberFindIdResult.jsp";
+						view = request.getRequestDispatcher(path);
+						view.forward(request, response);
+						
+					}else {
+						
+						out.println("alert('존재하지 않는 회원정보 입니다.');");
+						response.sendRedirect(request.getHeader("referer"));
+						
+					}
+			
 				} catch (Exception e) {
 
 					request.setAttribute("errorMsg", "아이디 찾기 과정에서 오류가 발생 하였습니다.");
@@ -264,6 +272,8 @@ public class MemberServlet extends HttpServlet {
 
 				try {
 
+					
+					
 					String member_Id = memberService.FindIdPh(member);
 					
 					request.setAttribute("member_Id", member_Id);
@@ -286,18 +296,27 @@ public class MemberServlet extends HttpServlet {
 
 		}
 
+		// 패스워드 찾기->변경페이지로 
 		else if (command.equals("/FindPwd")) {
+			
 			String member_Id = request.getParameter("inputId");
 			String member_NM = request.getParameter("inputName2");
 			String member_Email = request.getParameter("inputEmail2");
 
 			Member member = new Member(member_Id, member_NM, member_Email);
+			System.out.println(member_Email);
 
 			try {
 				String memberId = memberService.FindPwd(member);
-
-				response.sendRedirect("FindPwdChange");
-
+				
+				request.setAttribute("memberId", memberId);
+				
+				path = "/WEB-INF/views/member/memberFindPwdChange.jsp";
+				
+				request.getSession().setAttribute("changeMember", member);
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+				
 			}
 
 			catch (Exception e) {
@@ -310,6 +329,16 @@ public class MemberServlet extends HttpServlet {
 				view.forward(request, response);
 			}
 		}
+		else if(command.equals("/FindPwdChange")) {
+			
+			Member changeMember = (Member)request.getSession().getAttribute("changeMember");
+			request.getSession().removeAttribute("changeMember");
+			
+			System.out.println(changeMember);
+			
+			
+		}
+		
 
 	}
 

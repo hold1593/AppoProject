@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+<%
+	String memberId = (String) request.getAttribute("memberId");
+%>
+<%
+	String member_Id = (String) request.getAttribute("member_Id");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -133,7 +140,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 						<div>
 							<label for="inputEmail2" class="inputEmail2 mt-2">이메일</label> 
-							<input type="email" id="inputEmail2" class="form-control mb-3"
+							<input type="email" id="inputEmail2" name="inputEmail2" class="form-control mb-3"
 								placeholder="이메일을 입력해주세요." required>
 						</div>
 
@@ -233,6 +240,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 				//alert("빈 칸을 모두 작성해주세요.");
 				return false;
 			}
+			
+		
 
 
 		}
@@ -280,6 +289,10 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 				return false;
 			}
 		}
+		
+		
+		
+		
 	</script>
 
 
