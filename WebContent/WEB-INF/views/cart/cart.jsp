@@ -19,6 +19,7 @@
 </head>
 <body>
 	<%@ include file="../common/header.jsp"%>
+	<%@ include file="../common/nav.jsp"%>
     <div class="container pd-100">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12">
@@ -124,7 +125,7 @@
                                         <li>배송비<span class="float-right">3000</span></li>
                                         <li>결제금액<span class="float-right"><%= total%></span></li>
                                     </ul>
-                                    <a href="#" class="mt-3 px-4 py-2" id="cart-order">주문하기</a>
+                                    <a href="<%=request.getContextPath()%>/payment/addPayment" class="mt-3 px-4 py-2" id="cart-order">주문하기</a>
                                     <a href="#" class="mt-3 px-4 py-2" id="cart-home">메인으로</a>
                                 </div>
                             </div>

@@ -5,22 +5,6 @@
 <%
 	String msg = (String) session.getAttribute("msg");
 	Member loginMember = (Member) session.getAttribute("loginMember");
-
-	boolean save = false;
-
-	String saveId = "";
-
-	Cookie[] cookies = request.getCookies();
-
-	if (cookies != null) { 
-
-		for (Cookie c : cookies) {
-			if (c.getName().equals("saveId")) {
-				saveId = c.getValue();
-				save = true;
-			}
-		}
-	}
 %>
 
 
@@ -81,13 +65,15 @@
 									src="<%=request.getContextPath() %>/resources/appoimg/mypageicon.png" width="30" height="auto"></a>
 	
 								<% if(loginMember != null) { %>
+								
 								<div class="dropdown-menu">
-									<a class="dropdown-item" href="#">내정보</a> <a
-										class="dropdown-item" href="#">등록내역</a> <a
-										class="dropdown-item" href="#">판매내역</a> <a
-										class="dropdown-item" href="#">장바구니</a> <a
-										class="dropdown-item" href="#">알림</a> <a class="dropdown-item"
-										href="#">1:1대화</a> <a class="dropdown-item" href="<%=request.getContextPath() %>/member/logoutForm">로그아웃</a>
+									<a class="dropdown-item" href="#">내정보</a> 
+									<a class="dropdown-item" href="#">등록내역</a> 
+									<a class="dropdown-item" href="#">판매내역</a> 
+									<a class="dropdown-item" href="<%=request.getContextPath()%>/cart/selectCart">장바구니</a> 
+									<a class="dropdown-item" href="#">알림</a> 
+									<a class="dropdown-item" href="#">1:1대화</a> 
+									<a class="dropdown-item" href="<%=request.getContextPath() %>/member/logoutForm">로그아웃</a>
 								</div>
 								
 								<% }else{ %>

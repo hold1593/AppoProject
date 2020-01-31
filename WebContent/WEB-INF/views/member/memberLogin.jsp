@@ -6,6 +6,27 @@
 
 	String searchKey = request.getParameter("searchKey");
 	String searchValue = request.getParameter("searchValue");
+	
+	boolean save = false; // 아이디 저장 체크박스 값을 수정하기 위한변수
+	String saveId = ""; // 쿠키게 저장된 saveId라는 키가 가지고 있는 값을 저장할 변수
+	Cookie[] cookies = request.getCookies(); // 전달받은 쿠키 저장
+	
+	// 서버 첫 시작시 request.getCookies()의 값이 null
+	// -> if문으로 처리하지 않는경우 페이지 로딩시 NullPointException이 발생됨
+	if(cookies != null){
+		for(Cookie c : cookies){
+			// 쿠키 객체에서 name을 얻어와 그 값이 "saveId"와 같은지 비교
+			//		== key, 속성
+			if(c.getName().equals("saveId")){
+				saveId = c.getValue();
+				save = true;
+				
+				// 클라이언트 : 서버에게 전달받은 쿠키와 안의 sessiondId를 갖고있음.
+				// 서버 : 쿠키를 생성해서 안에 sessionId를 저장하여 클라이언트에게 전달
+			}
+			
+		}
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -30,7 +51,7 @@
 
 					<h1 class="h2 mb-3 font-weight-bold text-center">로그인</h1>
 
-					<label for="inputId" class="sr-only">아이디</label> <input name="member_Id"
+					<label for="inputId" class="sr-only">아이디</label> <input name="member_Id" value="<%= saveId%>"
 						type="text" id="inputId" class="form-control"
 						placeholder="아이디" required autofocus> <label
 						for="inputPassword" class="sr-only">비밀번호</label> <input name="member_Pwd"
