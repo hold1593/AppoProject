@@ -48,8 +48,8 @@
 					</div>
 
 					<div align="right">
-						<button class="btn mr-3btn btn-info" type="reset">이전</button>
-						<button class="btn btn-primary" type="submit">확인</button>
+						<button class="btn mr-3btn btn-info" type="button" onclick="location.href='<%=request.getHeader("referer")%>'">이전</button>
+						<button class="btn btn-primary" type="submit" >확인</button>
 					</div>
 				</form>
 

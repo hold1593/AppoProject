@@ -230,12 +230,10 @@ public class MemberServlet extends HttpServlet {
 				try {
 					
 					String member_Id = memberService.FindIdEm(member);
-					
 					PrintWriter out = response.getWriter();
 					
-					System.out.println(member_Id);
-					
 					if(member_Id != null) {
+						
 						request.setAttribute("member_Id", member_Id);
 						path = "/WEB-INF/views/member/memberFindIdResult.jsp";
 						view = request.getRequestDispatcher(path);
@@ -243,9 +241,10 @@ public class MemberServlet extends HttpServlet {
 						
 					}else {
 						
+						out.println("<script>");
 						out.println("alert('존재하지 않는 회원정보 입니다.');");
-						response.sendRedirect(request.getHeader("referer"));
-						
+						out.println("location.href = '"+request.getHeader("referer")+"';");
+						out.println("</script>");
 					}
 			
 				} catch (Exception e) {
@@ -271,15 +270,25 @@ public class MemberServlet extends HttpServlet {
 				member.setMember_Phone(member_Phone);
 
 				try {
-
-					
 					
 					String member_Id = memberService.FindIdPh(member);
+					PrintWriter out = response.getWriter();
 					
-					request.setAttribute("member_Id", member_Id);
-					path = "/WEB-INF/views/member/memberFindIdResult.jsp";
-					view = request.getRequestDispatcher(path);
-					view.forward(request, response);
+					if(member_Id != null) {
+					
+						request.setAttribute("member_Id", member_Id);
+						path = "/WEB-INF/views/member/memberFindIdResult.jsp";
+						view = request.getRequestDispatcher(path);
+						view.forward(request, response);
+						
+					} else {
+
+						out.println("<script>");
+						out.println("alert('존재하지 않는 회원정보 입니다.');");
+						out.println("location.href = '"+request.getHeader("referer")+"';");
+						out.println("</script>");
+						
+					}
 					
 
 				} catch (Exception e) {
@@ -304,18 +313,30 @@ public class MemberServlet extends HttpServlet {
 			String member_Email = request.getParameter("inputEmail2");
 
 			Member member = new Member(member_Id, member_NM, member_Email);
+			
 			System.out.println(member_Email);
 
 			try {
 				String memberId = memberService.FindPwd(member);
+				PrintWriter out = response.getWriter();
 				
-				request.setAttribute("memberId", memberId);
-				
-				path = "/WEB-INF/views/member/memberFindPwdChange.jsp";
-				
-				request.getSession().setAttribute("changeMember", member);
-				view = request.getRequestDispatcher(path);
-				view.forward(request, response);
+				if(memberId != null) {
+					
+					request.setAttribute("memberId", memberId);
+					
+					path = "/WEB-INF/views/member/memberFindPwdChange.jsp";
+					request.getSession().setAttribute("changeMember", member);
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+					
+				}else {
+					
+					out.println("<script>");
+					out.println("alert('존재하지 않는 회원정보 입니다.');");
+					out.println("location.href = '"+request.getHeader("referer")+"';");
+					out.println("</script>");
+					
+				}
 				
 			}
 
@@ -334,8 +355,43 @@ public class MemberServlet extends HttpServlet {
 			Member changeMember = (Member)request.getSession().getAttribute("changeMember");
 			request.getSession().removeAttribute("changeMember");
 			
-			System.out.println(changeMember);
+			System.out.println("여기!: "+changeMember);
 			
+			String inputNewPwd = request.getParameter("inputNewPassword1");
+			
+			try {
+				
+				PrintWriter out = response.getWriter();
+				
+				int result = memberService.updatePwd(changeMember, inputNewPwd);
+				
+				
+				
+				if(result > 0) {
+					
+					out.println("<script>");
+					out.println("alert('비밀번호가 변경되었습니다.');");
+					out.println("location.href = 'loginForm'");
+					out.println("</script>");
+					
+				}else{
+					
+					out.println("<script>");
+					out.println("alert('비밀번호가 변경에 실패하였습니다.');");
+					out.println("location.href = '"+request.getHeader("referer")+"';");
+					out.println("</script>");
+					
+				}
+			
+			}catch(Exception e) {
+				request.setAttribute("errorMsg", "비밀번호 수정 과정에서 오류가 발생하였습니다.");
+				
+				e.printStackTrace();
+				
+				path="/WEB-INF/views/common/errorPage.jsp";
+				view = request.getRequestDispatcher(path);
+				view.forward(request,response);
+			}
 			
 		}
 		

@@ -242,4 +242,63 @@ public class MemberDao {
 		return memberId;
 	}
 
+	/** 현재 계정 일치 여부 확인용 Dao
+	 * @param conn
+	 * @param changeMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int checkAcc(Connection conn, Member changeMember) throws Exception {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		
+		String query = prop.getProperty("checkAcc");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, changeMember.getMember_Id());
+			pstmt.setString(2, changeMember.getMember_Email());
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return result;
+		
+	}
+
+	/**  비밀번호 수정용 Dao
+	 * @param conn
+	 * @param changeMember
+	 * @return result 
+	 * @throws Exception
+	 */
+	public int updateNewPwd(Connection conn, Member changeMember) throws Exception{
+		
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		String query = prop.getProperty("updateNewPwd");
+		
+		try {
+			pstmt=conn.prepareStatement(query);
+			pstmt.setString(1, changeMember.getMember_Pwd());
+			pstmt.setString(2, changeMember.getMember_Id());
+			
+			result = pstmt.executeUpdate();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+		
+		
+	}
+
 }

@@ -15,7 +15,7 @@ import com.kh.appoproject.wrapper.EncryptWrapper;
 
 
 @WebFilter(urlPatterns = {"/member/login","/member/join"
-		,"/member/updatePwd","/member/deleteMember"})
+		,"/member/FindPwdChange","/member/deleteMember"})
 public class EncryptFilter implements Filter {
 
   
