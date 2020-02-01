@@ -15,9 +15,7 @@ public class Payment {
 	private int basicPrice; // 가격
 	private String imagePath; // 이미지
 	
-	public Payment() {
-		// TODO Auto-generated constructor stub
-	}
+	public Payment() {}
 
 	public Payment(int paymentNo, int basicNo, String destinationAddr, String destinationContact,
 			String destinationNote, String destinationName, String productTitle, String deviceName, String itemName,

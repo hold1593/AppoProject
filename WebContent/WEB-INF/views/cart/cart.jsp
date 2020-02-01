@@ -49,7 +49,7 @@
                     <div class="cart-notice py-4">
                         <span class="cart-notice text-muted"><small>가격, 옵션 등 상품정보가 변경된 경우 입찰이 불가할 수 있습니다.</small></span>
                     </div>
-                    <form method="GET" action="#">
+                    <form method="GET" action="<%=request.getContextPath()%>/payment/BillingInfo">
                         <div class="table-content table-responsive">
                             <table>
                                 <thead>
@@ -66,12 +66,13 @@
                                 	<tr>
 										<td colspan="6">장바구니에 담긴 상품이 없습니다.</td>
                                 	</tr>
+                         
                                 	<% } else {%>
 	                                	<% for(Cart cart : cList){ %>
 	                                    <tr>
 	                                        <!-- 체크 -->
 	                                        <td class="product-check">
-	                                        	<input type="checkbox" name="chk" id="<%= cart.getBasicNo() %>">
+	                                        	<input type="checkbox" name="chk" value="<%= cart.getBasicNo() %>">
 	                                        </td>
 	                                        <!-- 상품이미지 -->
 	                                        <td class="product-thumnail">
@@ -125,7 +126,8 @@
                                         <li>배송비<span class="float-right">3000</span></li>
                                         <li>결제금액<span class="float-right"><%= total%></span></li>
                                     </ul>
-                                    <a href="<%=request.getContextPath()%>/payment/addPayment" class="mt-3 px-4 py-2" id="cart-order">주문하기</a>
+                                    
+                                    <button <%-- href="<%=request.getContextPath()%>/payment/addPayment" --%> class="mt-3 px-4 py-2" id="cart-order">주문하기</button>
                                     <a href="#" class="mt-3 px-4 py-2" id="cart-home">메인으로</a>
                                 </div>
                             </div>
@@ -176,6 +178,16 @@
 	       		
 	       		$form.submit();
         	}
+        });
+        
+        $("#cart-order").on("click",function(){
+        	if(cList.isEmpty()){
+        		alert("장바구니에 상품이 없어 결제정보로 넘어갈 수 없습니다.");
+        	}else{
+        		var $button = $("<button>").prop("id","cart-order");
+        		$button.submit();
+        	}
+        	
         });
     });
     </script>

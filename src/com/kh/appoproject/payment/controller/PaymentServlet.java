@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 import com.kh.appoproject.cart.model.vo.Cart;
 import com.kh.appoproject.member.model.vo.Member;
 import com.kh.appoproject.payment.model.service.PaymentService;
-import com.kh.appoproject.product.model.service.ProductService;
 import com.kh.appoproject.product.model.vo.Product;
+
 
 @WebServlet("/payment/*")
 public class PaymentServlet extends HttpServlet {
@@ -38,26 +38,13 @@ public class PaymentServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 
-		List<Cart> cList = (List<Cart>) session.getAttribute("cList");
 		Member loginMember = (Member) session.getAttribute("loginMember");
-		ProductService productService = new ProductService();
-
-		
-
 		PaymentService paymentService = new PaymentService();
 
-		if (command.equals("/addPayment")) {
+		if (command.equals("/BillingInfo")) {
 			
-			List<Product> product = null;
-			
-			int totalprice = 0;
-
-			
-			
-			
-			
-			
-			
+			List<Cart> cList = null;
+			request.setAttribute("cList", cList);
 			path = "/WEB-INF/views/payment/payment.jsp";
 			view = request.getRequestDispatcher(path);
 			view.forward(request, response);
