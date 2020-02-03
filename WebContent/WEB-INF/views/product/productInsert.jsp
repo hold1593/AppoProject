@@ -66,9 +66,9 @@
 
 
 						<div class="img-notice mt-3">
-							<b>* 대표이미지 포함 최소 3장 이상의 사진을 올려주세요.</b> <br> - 상품 이미지는
-							600x600에 최적화 되어 있습니다. <br> - jpg/jpeg/png 확장자만 등록 가능합니다. <br>
-							- 사이즈에 따라 이미지가 깨지는 경우가 발생할 수 있습니다. <br> - 개당 이미지 최대 10M
+							<b>* 대표이미지 포함 1장 이상의 사진을 올려주세요.</b> <br> - 상품 이미지는
+							600x600에 최적화 되어 있습니다. <br> - jpg/jpeg/png/gif 확장자만 등록 가능합니다. <br>
+							- 사이즈에 따라 이미지가 깨지는 경우가 발생할 수 있습니다. <br> - 개당 이미지 크기는 최대 10M 입니다.
 						</div>
 					</div>
 				</div>
@@ -95,30 +95,21 @@
 						<div>
 							<div class="reg-category-wrap">
 								<div class="reg-category reg-ca1">
-									<div class="item-list">
-										<li class="ca-li1" role="button" class="btn btn-light">Mac</li>
-										<li class="ca-li1" role="button" class="btn btn-light">iPad</li>
-										<li class="ca-li1" role="button" class="btn btn-light">iPhone</li>
-										<li class="ca-li1" role="button" class="btn btn-light">Watch</li>
-										<li class="ca-li1" role="button" class="btn btn-light">Acc</li>
-										<!-- <a class="ioTvWS">
-                                                <button type="button" class="KVulL">iPad</button>
-                                            </a> -->
-									</div>
+									<ul class="item-list itemArea pt-3">
+										<li class="ca-li1">Mac</li>
+										<li class="ca-li1">iPad</li>
+										<li class="ca-li1">iPhone</li>
+										<li class="ca-li1">Watch</li>
+										<li class="ca-li1">Acc</li>
+									</ul>
 								</div>
 								<div class="reg-category reg-ca2">
-									<div class="item-list">
-										<li class="ca-li2" role="button" class="btn btn-light">PRO</li>
-										<li class="ca-li2" role="button" class="btn btn-light">mini</li>
-										<li class="ca-li2" role="button" class="btn btn-light">11</li>
-										<li class="ca-li2" role="button" class="btn btn-light">NIKE</li>
-										<li class="ca-li2" role="button" class="btn btn-light">AirPods</li>
-									</div>
+									<ul class="item-list pt-3" id="item-list2">
+									</ul>
 								</div>
 								<div class="reg-category reg-ca3">
-									<div class="item-list">
-										<li class="ca-li3" role="button" class="btn btn-light">b</li>
-									</div>
+									<ul class="item-list pt-3" id="item-list3">
+									</ul>
 								</div>
 							</div>
 							<div class="select-category">
@@ -200,7 +191,7 @@
 							<input id="product-basic-price" type="number" name="basicPrice"
 								placeholder="숫자만 입력해주세요" class="number form-control mr-1"
 								step="1000" disabled required>원 &nbsp;&nbsp;&nbsp;&nbsp; <span
-								class="font-italic">* 천단위(1000) 입력만 가능합니다</span>
+								class="font-italic">* 천단위(1000) 입력만 가능합니다 (천단위 미만 입력시 올림처리)</span>
 						</div>
 					</div>
 				</div>
@@ -242,11 +233,11 @@
 	            var value = $(this).text();
 	            $("#deviceName").val(value);
 	        });
-	        $('.ca-li2').click(function(){
+	        $(document).on("click",".ca-li2",function(){
 	            var value = $(this).text();
 	            $("#itemName").val(value);
 	        });
-	        $('.ca-li3').click(function(){
+	        $(document).on("click",".ca-li3",function(){
 	            var value = $(this).text();
 	            $("#item3").val(value);
 	        });
@@ -259,10 +250,10 @@
                         $("#counter").html(inputLength);
                     });
 
-                // 가격 천단위 미만 입력시 내림처리 (즉시입력가 제외)
+                // 가격 천단위 미만 입력시 올림처리 (즉시입력가 제외)
                 $('#product-basic-price, #product-start-price').on('change', function() {
                     var n = $(this).val(); 
-                    n = Math.floor(n/1000) * 1000; 
+                    n = Math.ceil(n/1000) * 1000; 
                     $(this).val(n);
                 });
 
@@ -285,6 +276,55 @@
                 $("#contentImgArea4").click(function(){
                     $("#img5").click();
                 });
+                
+                // 카테고리1
+                $(".ca-li1").click(function(){
+                	var deviceName = $(this).text();
+                	$.ajax({
+                        url : "selectCate",
+                        data : {deviceName:deviceName},
+                        type : "get",
+                        dataType : "json",
+                        success : function(iList){
+                           console.log(iList);
+                           $("#item-list2").html("");
+                           $.each(iList, function(i) {
+                              console.log(iList[i].iList);
+                              var $li = $("<li>").prop("class","ca-li2").html(iList[i].iList);
+              				  $("#item-list2").append($li);
+                           });
+                           
+                        },
+                        error : function() {
+                           console.log("ajax 통신 실패");
+                        }
+                     });
+                });
+                // 카테고리2
+                $(document).on("click",".ca-li2",function(){
+                	var itemName = $(this).text();
+                	$.ajax({
+                        url : "selectInfo",
+                        data : {itemName:itemName},
+                        type : "get",
+                        dataType : "json",
+                        success : function(gList){
+                           console.log(gList);
+                           $("#item-list3").html("");
+                           $.each(gList, function(i) {
+                              console.log(gList[i].gList);
+                              var $li = $("<li>").prop("class","ca-li3").html(gList[i].gList);
+              				  $("#item-list3").append($li);
+                           });
+                           
+                        },
+                        error : function() {
+                           console.log("ajax 통신 실패");
+                        }
+                     });
+                });
+                
+                
             });
 
             // 각각의 영역에 파일을 첨부했을 경우 미리 보기가 가능하도록 하는 함수
@@ -309,12 +349,14 @@
             // submit 동작
             function validate(){
             	// 사진 파일 검사
+            	
             	var check = $("#img1").val();
                 if(!check){
                     alert("대표 이미지를 등록해주세요");
                     $("#img1").focus();
                     return false;
                 }
+
 
                 var itemCheck = $("#deviceName").val();
                 if(!itemCheck){

@@ -18,7 +18,11 @@ import com.kh.appoproject.member.model.vo.Member;
 
 @WebFilter(urlPatterns = {"/member/mypage.do",
 						"/member/changePwd.do",
-						"/member/secession.do"})
+						"/member/secession.do"
+						,"/wish/*",
+						"/cart/*",
+						"/product/insertForm",
+						"/product/updateForm"})
 public class LoginFilter implements Filter {
 
    
@@ -47,7 +51,7 @@ public class LoginFilter implements Filter {
 		if(loginMember == null) {
 			// 로그인이 되어있지 않은 경우 
 			session.setAttribute("msg", "잘못된 경로로 접근하였습니다.");
-			res.sendRedirect(req.getContextPath()); // 메인페이지로 이동
+			res.sendRedirect(req.getContextPath() + "/member/loginForm" ); // 메인페이지로 이동
 		}else {
 			chain.doFilter(request, response);
 			// 로그인이 되어있는 경우

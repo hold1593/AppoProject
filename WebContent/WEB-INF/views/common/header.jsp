@@ -49,11 +49,11 @@
 							stroke-linejoin="round" stroke-width="2" role="img"
 							viewBox="0 0 24 24" focusable="false">&nbsp;&nbsp; 
 							<span class="logotxt mr-5">Appo</span></a> 
-							<a class="py-2 d-none d-md-inline-block" href="#">Mac</a> <a
-							class="py-2 d-none d-md-inline-block" href="#">iPad</a> <a
-							class="py-2 d-none d-md-inline-block" href="#">iPhone</a> <a
-							class="py-2 d-none d-md-inline-block" href="#">Watch</a> <a
-							class="py-2 d-none d-md-inline-block" href="#">Acc</a> <a
+							<a class="py-2 d-none d-md-inline-block" href="<%= request.getContextPath()%>/product/list?item=Mac">Mac</a> <a
+							class="py-2 d-none d-md-inline-block" href="<%= request.getContextPath()%>/product/list?item=iPad">iPad</a> <a
+							class="py-2 d-none d-md-inline-block" href="<%= request.getContextPath()%>/product/list?item=iPhone">iPhone</a> <a
+							class="py-2 d-none d-md-inline-block" href="<%= request.getContextPath()%>/product/list?item=Watch">Watch</a> <a
+							class="py-2 d-none d-md-inline-block" href="<%= request.getContextPath()%>/product/list?item=Acc">Acc</a> <a
 							class="py-2 d-none d-md-inline-block" href="#">고객지원</a> <a
 							class="py-2" href="#" aria-label="Product">
 	
@@ -71,6 +71,7 @@
 									<a class="dropdown-item" href="#">등록내역</a> 
 									<a class="dropdown-item" href="#">판매내역</a> 
 									<a class="dropdown-item" href="<%=request.getContextPath()%>/cart/selectCart">장바구니</a> 
+									<a class="dropdown-item" href="<%= request.getContextPath()%>/wish/wishlist">관심상품</a>
 									<a class="dropdown-item" href="#">알림</a> 
 									<a class="dropdown-item" href="#">1:1대화</a> 
 									<a class="dropdown-item" href="<%=request.getContextPath() %>/member/logoutForm">로그아웃</a>

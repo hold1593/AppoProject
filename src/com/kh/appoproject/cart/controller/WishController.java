@@ -65,14 +65,33 @@ public class WishController extends HttpServlet {
 		// 관심상품 목록 조회
 		else if(command.equals("/wishlist")) {
 			try {
-				List<Wish> wList = WishService.selectWish(loginMember.getMember_No());
+				List<Wish> wList = wishService.selectWish(loginMember.getMember_No());
+				
 				request.setAttribute("wList", wList);
 				
-				path = "/WEB-INF/views/wish/wish.jsp";
+				path = "/WEB-INF/views/cart/wish.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}catch(Exception e) {
 				ExceptionForward.errorPage(request, response, "관심상품 조회", e);
+			}
+		}
+		
+		else if(command.equals("/deleteWish")) {
+			String checkArr = request.getParameter("checkArr");
+			System.out.println(checkArr);
+			try {
+				int result = wishService.deleteWish(checkArr, loginMember.getMember_No());
+				
+				if(result>0) {
+					msg = "관심상품에서 삭제했습니다.";
+				}else {
+					msg = "삭제실패";
+				}
+				request.getSession().setAttribute("msg", msg);
+				response.sendRedirect("wishlist");
+			}catch(Exception e) {
+				ExceptionForward.errorPage(request, response, "관심상품 삭제", e);
 			}
 		}
 		

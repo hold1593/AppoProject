@@ -31,7 +31,7 @@ public class CartDao {
 	 * @param conn
 	 * @param productNo
 	 * @param loginMember
-	 * @return result
+	 * @return
 	 * @throws Exception
 	 */
 	public int selectNoCount(Connection conn, int productNo, Member loginMember) throws Exception {

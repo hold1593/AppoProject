@@ -48,8 +48,8 @@ public class ProductService {
 	 * @return result
 	 * @throws Exception
 	 */
-	public static int insertProduct(String itemName, String productForm, Product product, Product auction, Product basic, int memberWriter,
-			ArrayList<Image> fList) throws Exception {
+	public int insertProduct(String itemName, String productForm, Product product, Product auction, Product basic, int memberWriter,
+			ArrayList<Image> fList, String savePath) throws Exception {
 		Connection conn = getConnection();
 		ProductDao productDao = new ProductDao();
 		int result = 0;
@@ -64,7 +64,9 @@ public class ProductService {
 		System.out.println("productNo : " + productNo);
 		
 		if(productNo>0) { // 상품 번호를 얻어 온 경우
-			
+			if(product.getProductComment() !=null) {
+			product.setProductComment(product.getProductComment().replace("\r\n", "<br>"));
+			}
 			// 3) 품목코드, 상품번호를 저장하고 DB에 글 등록	
 			product.setItemCode(itemNo);
 			product.setProductNo(productNo);
@@ -103,8 +105,7 @@ public class ProductService {
 		else { // 6) DB삽입 실패시 서버에 저장된 파일을 삭제
 			for(Image file : fList) {
 				String path = file.getImagePath();
-				int saveFile = file.getImageNo();
-				File faildFile = new File(path + saveFile);
+				File faildFile = new File(savePath+path);
 				faildFile.delete();
 			}
 			rollback(conn);
@@ -177,9 +178,76 @@ public class ProductService {
 		return product;
 	}
 
+	/** 상품 게시글 수정용 Service
+	 * @param itemName
+	 * @param product
+	 * @param basic
+	 * @param memberWriter
+	 * @param fList
+	 * @return
+	 * @throws Exception
+	 */
 	public static int updateProduct(String itemName, Product product, Product basic, int memberWriter,
-			ArrayList<Image> fList) throws Exception {
-		return 0;
+			ArrayList<Image> fList, String[] beforeImg, String savePath) throws Exception {
+		Connection conn = getConnection();
+		ProductDao productDao = new ProductDao();
+		
+		
+		int itemNo = productDao.selectItemNo(conn, itemName);
+		product.setItemCode(itemNo);
+		
+		if(product.getProductComment() !=null) {
+			product.setProductComment(product.getProductComment().replace("\r\n","<br>"));
+		}
+		
+		int result = productDao.updateProduct(conn, product, memberWriter);
+		if(result>0) {
+			result=0;
+			result = productDao.updateBasic(conn, basic, product.getProductNo());
+			System.out.println("result ser : "+result);
+			System.out.println("fList1 : "+fList);
+			if(result > 0 && fList != null) {
+				System.out.println("fList2 : "+fList);
+				for(String beforePath : beforeImg) {
+					if(!beforePath.equals("")) 
+						System.out.println("삭제 결과 : " + productDao.deleteBeforeImage(conn, beforePath) );
+					
+						// 서버 파일 삭제 추가할 것!
+						for(Image file : fList) {
+						String path = file.getImagePath();
+						File faildFile = new File(savePath+path);
+						faildFile.delete();
+						}
+				}
+				
+				
+				//result = 0;
+				for(Image file : fList) {
+					// 현재 게시글 번호 추가
+					file.setProductNo(product.getProductNo());
+					result = productDao.insertImage(conn, file);
+					System.out.println("result ser2 : "+result);
+					// 삽입 실패 시
+					if(result == 0) break;
+				}
+			}
+		}
+		
+		// 5)트랜잭션 처리
+		if(result>0) commit(conn);
+		else { // 6) DB삽입 실패시 서버에 저장된 파일을 삭제
+			for(Image file : fList) {
+				String path = file.getImagePath();
+				File faildFile = new File(savePath+path);
+				faildFile.delete();
+			}
+			rollback(conn);
+		}
+		close(conn);
+		return result;
+		
+		
+		
 	}
 
 	/** 게시글 삭제 Service
@@ -218,6 +286,41 @@ public class ProductService {
 		}
 		close(conn);
 		return result;
+	}
+
+	/** 입찰 신청용 Service
+	 * @param productNo
+	 * @param biddingPrice
+	 * @return result
+	 * @throws Exception
+	 */
+	public int biddingProduct(int productNo, int biddingPrice, int memberNo) throws Exception{
+		Connection conn = getConnection();
+		int result = new ProductDao().biddingProduct(conn, productNo, biddingPrice, memberNo);
+		System.out.println("result2:" +result);
+		if(result>0) commit(conn);
+		else		 rollback(conn);
+		close(conn);
+		return result;
+	}
+
+	/** 아이템 조회용 Service
+	 * @param deviceName
+	 * @return iList
+	 * @throws Exception
+	 */
+	public List<String> selectItem(String deviceName) throws Exception{
+		Connection conn = getConnection();
+		List<String> iList = new ProductDao().selectItem(conn, deviceName);
+		close(conn);
+		return iList;
+	}
+
+	public List<String> selectInfo(String itemName) throws Exception{
+		Connection conn = getConnection();
+		List<String> gList = new ProductDao().selectInfo(conn, itemName);
+		close(conn);
+		return gList;
 	}
 
 }

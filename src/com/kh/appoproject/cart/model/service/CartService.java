@@ -41,7 +41,7 @@ public class CartService {
 	 * @return cList
 	 * @throws Exception
 	 */
-	public static List<Cart> selectCart(Member loginMember) throws Exception {
+	public List<Cart> selectCart(Member loginMember) throws Exception {
 		Connection conn = getConnection();
 		
 		List<Cart> cList = new CartDao().selectCart(conn, loginMember);

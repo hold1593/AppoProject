@@ -18,6 +18,7 @@
 <link rel="stylesheet"
 	href="<%=request.getContextPath() %>/css/productdetail.css"
 	type="text/css">
+
 </head>
 <body>
     <%@ include file="../common/header.jsp"%>
@@ -38,38 +39,38 @@
                         <% if(i==0) { 
                                     String src1 = request.getContextPath()+"/resources/uploadImages/"+files.get(i).getImagePath(); %>
                         <div class="tab-pane active show fade" id="pro-details1" role="tabpanel">
-                            <a href="<%= src1%>"> <img src="<%= src1%>">
-                            </a>
+                            <div> <img src="<%= src1%>">
+                            </div>
                         </div>
                         <% } else if(i==1) {
                                     String src2 = request.getContextPath()+"/resources/uploadImages/"+files.get(i).getImagePath(); %>
                         <div class="tab-pane fade" id="pro-details2" role="tabpanel">
-                            <a href="<%= src2%>"> <img src="<%= src2%>">
-                            </a>
+                            <div> <img src="<%= src2%>">
+                            </div>
                         </div>
                         <% } else if(i==2) {
                                     String src3 = request.getContextPath()+"/resources/uploadImages/"+files.get(i).getImagePath(); %>
                         <div class="tab-pane fade" id="pro-details3" role="tabpanel">
-                            <a href="<%= src3%>"> <img src="<%= src3%>">
-                            </a>
+                            <div> <img src="<%= src3%>">
+                            </div>
                         </div>
                         <% } else if(i==3) {
                                     String src4 = request.getContextPath()+"/resources/uploadImages/"+files.get(i).getImagePath(); %>
                         <div class="tab-pane fade" id="pro-details4" role="tabpanel">
-                            <a href="<%= src4%>"> <img src="<%= src4%>">
-                            </a>
+                            <div> <img src="<%= src4%>">
+                            </div>
                         </div>
                         <% } else if(i==4) {
                                     String src5 = request.getContextPath()+"/resources/uploadImages/"+files.get(i).getImagePath(); %>
                         <div class="tab-pane fade" id="pro-details5" role="tabpanel">
-                            <a href="<%= src5%>"> <img src="<%= src5%>">
-                            </a>
+                            <div> <img src="<%= src5%>">
+                            </div>
                         </div>
                         <% } %>
                         <% } %>
                     <% } %>
                     </div>
-                    <div class="product-details-small nav mt-2 overflow-hidden mr-35" role=tablist>
+                    <div class="product-details-small nav mt-2 overflow-hidden" role=tablist>
                         <% if(files != null){ %>
                         <%  for(int i=0; i<files.size(); i++) { %>
                         <% if(i==0) { 
@@ -115,13 +116,12 @@
 									<button class="btn btn-outline-secondary btn-sm float-right" id="deleteBtn">삭제</button>
 									<a href="updateForm?no=<%= product.getProductNo() %>&item=<%=product.getDeviceName() %>" role="button" class="btn btn-outline-secondary btn-sm float-right"
 		                                id="productModify">수정</a>
+		                            <button class="btn btn-danger btn-sm float-right" id="report-button" onclick="declare();">신고</button>
 									<% } else if(loginMember.getMember_No() == product.getMemberReg()){ %>
 									<button class="btn btn-outline-secondary btn-sm float-right" id="deleteBtn">삭제</button>
+									<button class="btn btn-danger btn-sm float-right" id="report-button" onclick="declare();">신고</button>
 									<% } %>
 								<% } %>
-								
-								
-	                            <button class="btn btn-danger btn-sm float-right" id="report-button" onclick="declare();">신고</button>
 	                        </div>
 	                    </div>
 	                    <h3 class="pb-4" id="details-title"><%=product.getProductTitle()%></h3>
@@ -170,17 +170,19 @@
 		                        <span id="details-price"><%= product.getBasicPrice() %></span> <span>원</span>
 		                    </div>
 		                </div>
-		
+						
 		                <form class="quickview-cart">
 		                    <input type="hidden" name="productNo" value=<%= product.getProductNo() %>>
 		                    <div class="d-inline-flex">
+		                    <% if(loginMember == null){ %>
+		                    	<a href="#" role="button" class="btn px-5 mr-2" id="buy-btn1">구매하기</a>
+		                    <% } else if(loginMember != null && !loginMember.getMember_Id().equals(product.getMemberId())){ %>
 		                        <a href="#" role="button" class="btn px-5 mr-2" id="buy-btn1">구매하기</a>
 		                        <a href="#cart-modal" data-toggle="modal" role="button"
-		                            class="btn btn-secondary px-4 mr-2" id="addCart" onclick="addCart()">장바구니</a> 
-		                        <a href="#" role="button" class="btn btn-secondary">판매자문의</a>
+		                            class="btn btn-secondary px-5 mr-2" id="addCart" onclick="addCart()">장바구니</a> 
+		                    <% } %>
 		                    </div>
 		                </form>
-		
 		                <% } else{ %>
 		
 		                <div class="product-details-deadline pb-1 p-0">
@@ -196,8 +198,12 @@
 		                        <span>바로 구매가</span>
 		                    </div>
 		                    <div class="details-dir-price d-inline">
+		                     <% if(product.getAuctionImmediateBid()!=0){ %>
 		                        <span id="details-dir-price"><%= product.getAuctionImmediateBid() %></span>
 		                        <span>원</span>
+		                     <% } else { %>
+		                     	<span>-</span>
+		                     <% } %>
 		                    </div>
 		                </div>
 		                <div class="product-details-price pb-4">
@@ -210,11 +216,20 @@
 		                <form class="quickview-cart">
 		                    <input type="hidden" name="productNo" value=<%= product.getProductNo() %>>
 		                    <div class="d-inline-flex">
-		                        <a href="#" data-toggle="modal" data-target="#auction-modal" role="button" class="btn px-4 mr-1"
-		                            id="auction-btn">입찰하기</a> <a href="#" role="button" class="btn  px-4 mr-1"
+		                    <% if(loginMember == null){ %>
+		                    	<a href="#" data-toggle="modal" data-target="#auction-modal" role="button" class="btn px-5 mr-1"
+		                            id="auction-btn">입찰하기</a>
+		                        <a href="#" role="button" class="btn px-5 mr-1"
 		                            id="buy-btn2">바로구매</a>
-		                        <a href="#wish-modal" data-toggle="modal" role="button" class="btn btn-secondary mr-1" id="addWish" onclick="addWish()">관심상품</a>
-		                        <a href="#" role="button" class="btn btn-secondary">판매자문의</a>
+		                    <% } else if(loginMember != null && !loginMember.getMember_Id().equals(product.getMemberId())){ %>
+		                        <a href="#" data-toggle="modal" data-target="#auction-modal" role="button" class="btn px-5 mr-1"
+		                            id="auction-btn">입찰하기</a> 
+		                        <% if(product.getAuctionImmediateBid()!=0){ %>
+		                        <a href="#" role="button" class="btn px-5 mr-1"
+		                            id="buy-btn2">바로구매</a>
+		                        <% } %>   
+		                        <a href="#wish-modal" data-toggle="modal" role="button" class="btn btn-secondary px-3" id="addWish" onclick="addWish()">관심상품</a>
+		                    <% } %>
 		                    </div>
 		                </form>
 		
@@ -264,19 +279,26 @@
                                         </tr>
                                         <tr>
                                             <td class="modal-td">현재가</td>
-                                            <td><span class="text-danger"><%= product.getAuctionReservePrice() %></span>원
+                                            <td><span class="text-danger" id="modalCurrentPrice"><%= product.getAuctionReservePrice() %></span>원
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="modal-td">즉시구매가</td>
-                                            <td><span><%= product.getAuctionImmediateBid() %></span>원</td>
+                                            <td class="modal-td">바로구매가</td>
+                                            <td>
+                                            <% if(product.getAuctionImmediateBid()!=0){ %>
+                                            <span><%= product.getAuctionImmediateBid() %></span>원
+                                            <% } else {%>
+                                            <span>-</span>
+                                            <% } %>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="modal-td">입찰금액</td>
                                             <td><input value="<%= product.getAuctionReservePrice() %>" class="text-danger"
-                                                    id="currentPrice" style="text-align: right;" readonly></input><label>원
-                                                    보다 큰 금액만 입찰할 수 있습니다.</label> <br> <input type="number" id="addPrice"
-                                                    style="text-align: right;">원
+                                                    id="currentPrice" style="text-align: right;" readonly></input>
+                                                    <label>원 보다 큰 금액만 입찰할 수 있습니다.</label> <br> 
+                                                <input type="number" id="biddingPrice" style="text-align: right;" step="1000">원
+                                                (천단위 미만 입력시 올림처리)
                                                 <p id="checkPrice"></p>
                                             </td>
                                         </tr>
@@ -299,7 +321,7 @@
                                 <p><strong>관심상품 페이지로 이동하시겠습니까?</strong></p>
                             </div>
                             <div class="cart-modal-footer">
-                                <button type="button" class="btn go-cart" onclick="location.href='/appoproject/wish/wishlist'">관심상품 가기</button>
+                                <button type="button" class="btn go-cart" id="go-wish" onclick="location.href='/appoproject/wish/wishlist'">관심상품 가기</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                             </div>
                         </div>
@@ -320,13 +342,17 @@
         <div class="container">
             <div class="product-description-review text-center">
                 <div class="description-review-title nav" role=tablist>
-                    <a class="active" href="#pro-dec" data-toggle="tab" role="tab" aria-selected="true"> 상품설명 </a> <a
-                        href="#details-pro-inform" data-toggle="tab" role="tab" aria-selected="false"> 제품정보 </a>
+                    <a class="active" href="#pro-dec" data-toggle="tab" role="tab" aria-selected="true"> 상품설명 </a> 
+                    <a href="#details-pro-inform" data-toggle="tab" role="tab" aria-selected="false"> 제품정보 </a>
                 </div>
                 <hr>
                 <div class="description-review-text tab-content pt-5">
                     <div class="tab-pane active show fade" id="pro-dec" role="tabpanel">
+                    <% if(product.getProductComment()!=null){ %>
                         <p><%= product.getProductComment() %></p>
+                    <% } else {%>
+                    	<p> 등록한 상품 설명이 없습니다. </p>
+                    <% } %>
                     </div>
                     <div class="tab-pane fade" id="details-pro-inform" role="tabpanel">
                         <p>제품정보가 나와요^^</p>
@@ -337,8 +363,8 @@
     </div>
 	<script>
        $(function(){
-           $("#addPrice").on("input",function(){
-               if( parseInt($("#addPrice").val()) < parseInt($("#currentPrice").val())){
+           $("#biddingPrice").on("input",function(){
+               if( parseInt($("#biddingPrice").val()) <= parseInt($("#currentPrice").val())){
                    $("#checkPrice").text("현재 입찰금액보다 큰 금액을 입력해주세요.").css("color","red");
                    return false;
                }else{
@@ -346,18 +372,13 @@
                    return true;
                }
            });
-           $("#goAuction").click(function (){
-               var text = $("#addPrice").val();
-               if( text == "" || text.length == 0){
-                   alert("금액을 입력하세요.");
-                   $("#addPrice").focus();
-                   return false;
-               }else{
-                   alert("경매 입찰 참여 완료");
-                   return true;
-               }
-           });
            
+           // 천 단위 아래 내림
+           $('#biddingPrice').on('change', function() {
+               var n = $(this).val(); 
+               n = Math.ceil(n/1000) * 1000; 
+               $(this).val(n);
+           });
            
            // 삭제 확인
            $("#deleteBtn").on("click",function(){
@@ -367,86 +388,110 @@
       
       // 신고
       function declare(event){
-    	  <% if(loginMember == null) { %>
-				alert("로그인이 필요합니다.");
-				location.href="<%=request.getContextPath() %>/member/loginForm";
-			<%}else{%>
-				if(confirm("정말 신고하시겠습니까?")){
-					var memberId = "<%= loginMember.getMember_Id()%>";
-					var productNo = "<%= product.getProductNo()%>";
-					$.ajax({
-						url : "reportProduct",
-						type : "post",
-						data : {memberId:memberId,productNo:productNo},
-						success : function(msg) {
-							alert(msg);
-						},
-						error : function() {
-							alert("ajax 통신 실패");
-						}
-					});
-				
-				}
-			<% } %>
+			if(confirm("정말 신고하시겠습니까?")){
+				var memberId = "<%= loginMember.getMember_Id()%>";
+				var productNo = "<%= product.getProductNo()%>";
+				$.ajax({
+					url : "reportProduct",
+					type : "post",
+					data : {memberId:memberId,productNo:productNo},
+					success : function(msg) {
+						alert(msg);
+					},
+					error : function() {
+						alert("ajax 통신 실패");
+					}
+				});
+			}
       }
        
       // 장바구니 추가
       function addCart(event){
-   	   
-    	  <% if(loginMember == null) { %>
-	   		   alert("로그인이 필요합니다.");
-	   		location.href="<%=request.getContextPath() %>/member/loginForm";
-	   		<%}else{%>
-	   			// 상품 번호를 server로 전달
-	   			var productNo = <%=product.getProductNo()%>;
-	   			
-	   			var check = true;
-	   			
-	   			$.ajax({
-	   				url : "<%= request.getContextPath() %>/cart/add",
-	   				type : "get",
-	   				data : {productNo:productNo},
-	   				success : function(result){
-	   					if(result == 0){
-	   						$("#cart-modal").find(".modal-body").children().eq(0).text("이미 장바구니에 담긴 상품입니다.");
-	   					}else if(result > 0){
-	   						check = false;
-	   					}
-	   				},
-	   				error: function(){
-	   					console.log("ajax 실패");
-	   				}
-	   			});
-	   			if(check)  event.preventDefault();	
-	   		<% } %>
+   			// 상품 번호를 server로 전달
+   			var productNo = <%=product.getProductNo()%>;
+   			
+   			var check = true;
+   			
+   			$.ajax({
+   				url : "<%= request.getContextPath() %>/cart/add",
+   				type : "get",
+   				data : {productNo:productNo},
+   				success : function(result){
+   					if(result == 0){
+   						$("#cart-modal").find(".modal-body").children().eq(0).text("이미 장바구니에 담긴 상품입니다.");
+   					}else if(result > 0){
+   						check = false;
+   					}
+   				},
+   				error: function(){
+   					console.log("ajax 실패");
+   				}
+   			});
+   			if(check)  event.preventDefault();	
       }
       
       // 관심상품 추가
       function addWish(event){
-    	  <% if(loginMember == null) { %>
-   		   alert("로그인이 필요합니다.");
-   		   location.href="<%=request.getContextPath() %>/member/loginForm";
-   		<%}else{%>
-   		   var productNo = <%=product.getProductNo()%>;
-   		   var check = true;
-   		   $.ajax({
-   				url : "<%= request.getContextPath() %>/wish/add",
-   			   type : "get",
-   			   data : {productNo:productNo},
-   			   success:function(result){
-   				   if(result==0){
-   					   $("#wish-modal").find(".modal-body").children().eq(0).text("이미 관심상품에 담긴 상품입니다.");
-   				   }else if(result>0){
-   					   check = false;
-   				   }
-   			   },
-   			   error : function(){
-   				   console.log("ajax 실패");
-   			   }
-   		   });
-   		   if(check) event.preventDefault();
-   		<% } %>
+  		   var productNo = <%=product.getProductNo()%>;
+  		   var check = true;
+  		   $.ajax({
+  				url : "<%= request.getContextPath() %>/wish/add",
+  			   type : "get",
+  			   data : {productNo:productNo},
+  			   success:function(result){
+  				   if(result==0){
+  					   $("#wish-modal").find(".modal-body").children().eq(0).text("이미 관심상품에 담긴 상품입니다.");
+  				   }else if(result>0){
+  					   check = false;
+  				   }
+  			   },
+  			   error : function(){
+  				   console.log("ajax 실패");
+  			   }
+  		   });
+  		   if(check) event.preventDefault();
       }
+      
+      // 입찰하기
+  		$("#goAuction").click(function (){
+            var biddingPrice = $("#biddingPrice").val();
+            if( biddingPrice == "" || biddingPrice.length == 0){
+                alert("금액을 입력하세요.");
+                $("#biddingPrice").focus();
+                return false;
+            }else if("<%=loginMember%>"=="null"){
+            	alert("로그인이 필요합니다.");
+        		location.href="<%=request.getContextPath() %>/member/loginForm";
+        		return false;
+            }else{
+            	var productNo = <%=product.getProductNo()%>;
+            	var check = true;
+            	$.ajax({
+        			  url : "biddingProduct",
+        			  type : "post",
+        			  data: {productNo:productNo,biddingPrice:biddingPrice},
+        			  success : function(result){
+        				  if(result==0){
+        					  alert("경매 입찰 신청 실패");
+        				  }else if(result>0){
+        					  alert("입찰 신청되었습니다.");
+        					  $("#biddingPrice").val("");
+        					  $("#details-price").text(biddingPrice);
+        					  $("#modalCurrentPrice").text(biddingPrice);
+        					  $("#currentPrice").val(biddingPrice);
+        					  $("#checkPrice").text("");
+        					  check = false;
+        				  }
+        			  },
+        			  error : function(){
+        				  alert("ajax 통신 실패");
+        			  }
+        		});
+            	if(check) event.preventDefault();
+            }
+ 		});
+  		
+     
    </script>
 </body>
 </html>

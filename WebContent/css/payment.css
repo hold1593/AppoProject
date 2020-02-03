@@ -27,11 +27,7 @@
   width: 100px;
   height: 100px;
 }
-#img5x5{
-  width: 100px;
-  height: auto;
-}
-#no_img{
+.img5x5{
   width: 100px;
   height: auto;
 }

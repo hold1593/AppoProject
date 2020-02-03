@@ -26,11 +26,9 @@ public class Product {
 	private String deviceName;
 	private String memberId;
 	private int deviceCode;
+	private String imagePath;
 
 	public Product() {	}
-	
-	
-
 
 	/**
 	 * @param basicPrice
@@ -41,17 +39,18 @@ public class Product {
 	}
 
 	
-
-	public Product(String productTitle, String productComment, int itemCode, int deviceCode) {
+	public Product(String itemName) {
 		super();
+		this.itemName = itemName;
+	}
+
+	public Product(int productNo, String productTitle, String productComment, int itemCode) {
+		super();
+		this.productNo = productNo;
 		this.productTitle = productTitle;
 		this.productComment = productComment;
 		this.itemCode = itemCode;
-		this.deviceCode = deviceCode;
 	}
-
-
-
 
 	/**
 	 * @param productTitle
@@ -69,8 +68,6 @@ public class Product {
 		this.itemCode = itemCode;
 	}
 
-	
-	
 
 	/**
 	 * @param auctionImmediateBid
@@ -84,7 +81,6 @@ public class Product {
 		this.auctionDeadline = auctionDeadline;
 	}
 
-
 	public Product(String productTitle, String productComment, String productUsed, String productForm, int itemCode,
 			int basicPrice) {
 		super();
@@ -95,7 +91,6 @@ public class Product {
 		this.itemCode = itemCode;
 		this.basicPrice = basicPrice;
 	}
-
 
 
 	public Product(String productTitle, String productComment, String productUsed, String productForm, int itemCode,
@@ -114,13 +109,14 @@ public class Product {
 
 
 	public Product(int productNo, String productTitle, String productForm, int productCount, int basicPrice,
-			int auctionReservePrice, Date auctionDeadline) {
+			int auctionImmediateBid, int auctionReservePrice, Date auctionDeadline) {
 		super();
 		this.productNo = productNo;
 		this.productTitle = productTitle;
 		this.productForm = productForm;
 		this.productCount = productCount;
 		this.basicPrice = basicPrice;
+		this.auctionImmediateBid = auctionImmediateBid;
 		this.auctionReservePrice = auctionReservePrice;
 		this.auctionDeadline = auctionDeadline;
 	}
@@ -383,24 +379,28 @@ public class Product {
 
 
 
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
 
 	@Override
 	public String toString() {
-		return "Product [productNo=" + productNo + ", "
-				+ (productRegDate != null ? "productRegDate=" + productRegDate + ", " : "")
-				+ (productTitle != null ? "productTitle=" + productTitle + ", " : "")
-				+ (productComment != null ? "productComment=" + productComment + ", " : "")
-				+ (productUsed != null ? "productUsed=" + productUsed + ", " : "")
-				+ (productForm != null ? "productForm=" + productForm + ", " : "")
-				+ (productState != null ? "productState=" + productState + ", " : "") + "productCount=" + productCount
+		return "Product [productNo=" + productNo + ", productRegDate=" + productRegDate + ", productTitle="
+				+ productTitle + ", productComment=" + productComment + ", productUsed=" + productUsed
+				+ ", productForm=" + productForm + ", productState=" + productState + ", productCount=" + productCount
 				+ ", memberReg=" + memberReg + ", itemCode=" + itemCode + ", basicNo=" + basicNo + ", basicPrice="
 				+ basicPrice + ", auctionNo=" + auctionNo + ", auctionImmediateBid=" + auctionImmediateBid
-				+ ", auctionReservePrice=" + auctionReservePrice + ", "
-				+ (auctionDeadline != null ? "auctionDeadline=" + auctionDeadline + ", " : "") + "biddingMember="
-				+ biddingMember + ", " + (itemName != null ? "itemName=" + itemName + ", " : "")
-				+ (itemInfo != null ? "itemInfo=" + itemInfo + ", " : "")
-				+ (deviceName != null ? "deviceName=" + deviceName : "") + "]";
+				+ ", auctionReservePrice=" + auctionReservePrice + ", auctionDeadline=" + auctionDeadline
+				+ ", biddingMember=" + biddingMember + ", itemName=" + itemName + ", itemInfo=" + itemInfo
+				+ ", deviceName=" + deviceName + ", memberId=" + memberId + ", deviceCode=" + deviceCode
+				+ ", imagePath=" + imagePath + "]";
 	}
+
+
 
 	
 	

@@ -30,11 +30,21 @@ public class WishService {
 		return result;
 	}
 
-	public static List<Wish> selectWish(int memberNo) throws Exception {
+	public List<Wish> selectWish(int memberNo) throws Exception {
 		Connection conn = getConnection();
 		
 		List<Wish> wList = new WishDao().selectWish(conn,memberNo);
 		close(conn);
 		return wList;
+	}
+
+	public int deleteWish(String checkArr, int memberNo) throws Exception {
+		Connection conn = getConnection();
+		int result = new WishDao().deleteWish(conn, checkArr, memberNo);
+		
+		if(result>0) commit(conn);
+		else		rollback(conn);
+		close(conn);
+		return result;
 	}
 }

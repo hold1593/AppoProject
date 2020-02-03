@@ -48,7 +48,7 @@
 							<img id="contentImg3" width="150" height="150">
 						</div>
 						<div class="mr-2 mb-2 boardImg" id="contentImgArea4">
-							<img id="contentImg3" width="150" height="150">
+							<img id="contentImg4" width="150" height="150">
 						</div>
 						<script>
 						<% if(files != null){ %>
@@ -188,9 +188,7 @@
 					</div>
 					<div class="col-md-9">
 						<textarea class="form-control" rows="10" name="productComment"
-							placeholder="내용을 입력해주세요" style="resize: none">
-							<%= product.getProductComment() %>
-						</textarea>
+							placeholder="내용을 입력해주세요" style="resize: none"><%= product.getProductComment() %></textarea>
 					</div>
 				</div>
 
@@ -199,6 +197,16 @@
 						<input type="submit" class="btn" value="수정하기">
 					</div>
 				</div>
+				
+				<%	for(int i=0 ; i<5 ; i++){ 
+						if(i < files.size()){
+				%>
+					<input type="hidden" name="beforeImg" value="<%= files.get(i).getImagePath()%>">
+					<% }else{%>
+					<input type="hidden" name="beforeImg" value="">
+				
+				<%		} 
+				} %>
 			</form>
 		</div>
 	</div>
@@ -275,14 +283,26 @@
             
             // submit 동작
             function validate(){
-            	// 사진 파일 검사
-            	var check = $("#img1").val();
-            	console.log(check);
-                if(!check){
-                    alert("대표 이미지를 등록해주세요");
-                    $("#img1").focus();
-                    return false;
-                }
+            	
+            	$.each( $("input[type=file]"), function(index, item){
+            		
+            		if($(item).val() == ""){
+            			$($("input[name=beforeImg]").get(index)).val("");
+            		}
+            	});
+            	
+            	
+            	
+            	if($("#img1").val() != ""){
+	            	// 사진 파일 검사
+	            	var check = $("#img1").val();
+	            	console.log(check);
+	                if(!check){
+	                    alert("대표 이미지를 등록해주세요");
+	                    $("#img1").focus();
+	                    return false;
+	                }
+            	}
 
                 var itemCheck = $("#deviceName").val();
                 if(!itemCheck){

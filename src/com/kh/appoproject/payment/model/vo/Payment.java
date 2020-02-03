@@ -34,6 +34,14 @@ public class Payment {
 		this.basicPrice = basicPrice;
 		this.imagePath = imagePath;
 	}
+	
+	
+	public Payment(int basicNo, String destinationAddr, int basicPrice) {
+		super();
+		this.basicNo = basicNo;
+		DestinationAddr = destinationAddr;
+		this.basicPrice = basicPrice;
+	}
 
 	public int getPaymentNo() {
 		return paymentNo;

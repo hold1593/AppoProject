@@ -66,7 +66,7 @@ public class MemberServlet extends HttpServlet {
 
 				if (loginMember != null) {
 
-					session.setMaxInactiveInterval(600);
+					//session.setMaxInactiveInterval(600);
 
 					session.setAttribute("loginMember", loginMember);
 
@@ -82,7 +82,6 @@ public class MemberServlet extends HttpServlet {
 					}
 
 					cookie.setPath("/");
-
 					response.addCookie(cookie);
 					session.setAttribute("msg", "로그인 성공!");
 					response.sendRedirect(request.getContextPath());

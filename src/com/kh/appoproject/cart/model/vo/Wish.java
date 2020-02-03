@@ -19,8 +19,10 @@ public class Wish {
 
 	
 	
+
+
 	public Wish(int auctionNo, String productTitle, String deviceName, String itemName, String memberId,
-			int auctionImmediateBid, int auctionReservePrice, Date auctionDeadline) {
+			int auctionImmediateBid, int auctionReservePrice, String imagePath, Date auctionDeadline) {
 		super();
 		this.auctionNo = auctionNo;
 		this.productTitle = productTitle;
@@ -29,6 +31,7 @@ public class Wish {
 		this.memberId = memberId;
 		this.auctionImmediateBid = auctionImmediateBid;
 		this.auctionReservePrice = auctionReservePrice;
+		this.imagePath = imagePath;
 		this.auctionDeadline = auctionDeadline;
 	}
 

@@ -59,15 +59,12 @@
 .item-list {
     width: 100%;
     height: 100%;
-    padding-top: 0.5rem;
-    padding-right: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-left: 1.5rem;
 }
 .reg-category li{
     color:black;
+    background:white;
 }
-.reg-category li:hover {
+.reg-category ul li:hover {
     color: rgb(255, 80, 88);
     text-decoration:none;
     cursor: pointer;
@@ -239,7 +236,7 @@ thead {
 .table-content table td.product-thumbnail {
     width: 130px;
 }
-.delete input {
+.delete button {
     background-color: transparent;
     border: 1px solid #ddd;
     color: #555;
@@ -247,11 +244,13 @@ thead {
     height: 42px;
     width: 120px;
     font-weight: 700;
+    text-align:center;
 }
-.delete-all input.button:hover {
+.delete-all button.button:hover {
     background-color: #050035;
     border: medium none;
     color: #fff;
+    cursor: pointer;
 }
 /* --------------------------------------------------------- */
 .num1{
@@ -350,7 +349,7 @@ thead {
     width: 100%;
     height:600px;
 } */
-.product-details-large .tab-pane > a img {
+.product-details-large .tab-pane > div img {
     width: 100%;
     height:600px;
 }
@@ -402,8 +401,8 @@ thead {
 .description-review-text .tab-pane p {
     color: #545454;
     font-size: 15px;
-    margin: 0 auto;
-    width: 61%;
+    /*margin: 0 auto;*/
+    /*width: 61%;*/
 }
 .description-review-title {
     justify-content: center;
@@ -462,14 +461,22 @@ h5.h5 {
     color: #fff;
     background-color: #ef5777;
     font-size: 12px;
-    text-transform: uppercase;
     padding: 2px 7px;
     display: block;
     position: absolute;
     top: 10px;
     left: 0
 }
-
+#product-im-label {
+    color: #fff;
+    background-color:#1031ac;
+    font-size: 12px;
+    padding: 2px 7px;
+    display: block;
+    position: absolute;
+    top: 35px;
+    left: 0
+}
 .product-grid .product-content {
     background-color: #fff;
     text-align: center;
@@ -606,6 +613,14 @@ h5.h5 {
     color:white;
 }
 #go-cart:hover {
+    background-color: #000000;
+    color:white;
+}
+#go-wish{
+    background-color: #050035;
+    color:white;
+}
+#go-wish:hover {
     background-color: #000000;
     color:white;
 }

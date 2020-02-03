@@ -5,7 +5,6 @@
 <%
 	List<Cart> cList = (List<Cart>)request.getAttribute("cList");
 
-	int cartPrice = 0;
 	int fee = 3000;
 %>
 <!DOCTYPE html>
@@ -53,8 +52,8 @@
                         <div class="table-content table-responsive">
                             <table>
                                 <thead>
-                                    <tr class="product-top-tr">
-                                        <th><input type="checkbox" id="checkall"></th>
+                                     <tr class="product-top-tr">
+                                        <th><input type="checkbox" id="checkall" name="chk" value="0" onchange="itemSum(this.form);"></th>
                                         <th colspan="2">상품정보</th>
                                         <th>판매자</th>
                                         <th>배송비</th>
@@ -66,17 +65,16 @@
                                 	<tr>
 										<td colspan="6">장바구니에 담긴 상품이 없습니다.</td>
                                 	</tr>
-                         
                                 	<% } else {%>
 	                                	<% for(Cart cart : cList){ %>
 	                                    <tr>
 	                                        <!-- 체크 -->
 	                                        <td class="product-check">
-	                                        	<input type="checkbox" name="chk" value="<%= cart.getBasicNo() %>">
+	                                        	<input type="checkbox" name="chk" id="<%= cart.getBasicNo() %>" value="<%= cart.getBasicNo() %>">
 	                                        </td>
 	                                        <!-- 상품이미지 -->
 	                                        <td class="product-thumnail">
-	                                            <a class="thumbnail pull-left" href="#">
+	                                            <a class="thumbnail pull-left" href="<%= request.getContextPath()%>/product/detail?no=<%= cart.getBasicNo()%>">
 	                                            	<% if (cart.getImagePath()==null){ %> 
 	                                            	<img class="media-object" src="<%= request.getContextPath()%>/resources/uploadImages/no.jpg" style="width: 72px; height: 72px;"> 
 	                                            	<% } else{ %>
@@ -87,7 +85,7 @@
 	                                        <!-- 상품정보 -->
 	                                        <td class="product-name">
 	                                        	
-	                                            <span><a href="#"><%= cart.getProductTitle() %></a></span>
+	                                            <span><a href="<%= request.getContextPath()%>/product/detail?no=<%= cart.getBasicNo()%>"><%= cart.getProductTitle() %></a></span>
 	                                            <br>
 	                                            <span><%= cart.getDeviceName() %></span>
 	                                            <br>
@@ -103,7 +101,6 @@
 	                                    </tr>
 	                                    
 	                                    <!-- 장바구니 상품금액 합 -->
-                                    	<% cartPrice +=  cart.getBasicPrice(); %>
                                    		<% } %>
                                     <% } %>
                                 </tbody>
@@ -113,7 +110,7 @@
                             <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
                                 <div class="delete-all mt-4">
                                     <div class="delete" id="deleteArea">
-                                        <input class="button" name="delete-cart" value="선택상품 삭제" id="deleteCart">
+                                        <button class="button" name="delete-cart" id="deleteCart">선택상품 삭제</button>
                                     </div>
                                 </div>
                             </div>
@@ -121,12 +118,10 @@
                                 <div class="cart-page-total pt-4">
                                     <h3 class="mb-3">Cart totals</h3>
                                     <ul class="pl-0">
-                                    	<% int total = cartPrice + fee; %>
-                                        <li>상품금액<span class="float-right"><%= cartPrice %></span></li>
-                                        <li>배송비<span class="float-right">3000</span></li>
-                                        <li>결제금액<span class="float-right"><%= total%></span></li>
+                                        <li>상품금액<span class="float-right" id="sum"></span></li>
+                                        <li>배송비<span class="float-right"><%= fee %></span></li>
+                                        <li>결제금액<span class="float-right" id="total_sum"></span></li>
                                     </ul>
-                                    
                                     <button <%-- href="<%=request.getContextPath()%>/payment/addPayment" --%> class="mt-3 px-4 py-2" id="cart-order">주문하기</button>
                                     <a href="#" class="mt-3 px-4 py-2" id="cart-home">메인으로</a>
                                 </div>
@@ -179,17 +174,19 @@
 	       		$form.submit();
         	}
         });
-        
-        $("#cart-order").on("click",function(){
-        	if(cList.isEmpty()){
-        		alert("장바구니에 상품이 없어 결제정보로 넘어갈 수 없습니다.");
-        	}else{
-        		var $button = $("<button>").prop("id","cart-order");
-        		$button.submit();
-        	}
-        	
-        });
     });
+    function itemSum(form){
+    	var sum = 0;
+        var fee = 3000;
+    	var count = form.chk.length;
+    	for(var i=0; i<count; i++){
+    		if(form.chk[i].checked==true){
+    			sum+=parseInt(form.chk[i].value);
+    		}
+    	}
+    	$("#sum").text(sum);
+    	$("#total_sum").text(sum+fee);
+    };
     </script>
 </body>
 </html>

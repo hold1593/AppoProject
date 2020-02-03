@@ -89,7 +89,8 @@ public class WishDao {
 								rset.getString("ITEM_NAME"), 
 								rset.getString("MEMBER_ID"),  
 								rset.getInt("AUCTION_IMMEDIATE_BID"), 
-								rset.getInt("AUCTION_RESERVE_PRICE"), 
+								rset.getInt("AUCTION_RESERVE_PRICE"),
+								rset.getString("IMAGE_PATH"),
 								rset.getDate("AUCTION_DEADLINE"));
 				wList.add(wish);
 			}
@@ -98,6 +99,24 @@ public class WishDao {
 			close(pstmt);
 		}
 		return wList;
+	}
+
+	public int deleteWish(Connection conn, String checkArr, int memberNo) throws Exception{
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		String query = prop.getProperty("deleteWish");
+		
+		query+="(" + checkArr +")";
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, memberNo);
+			result = pstmt.executeUpdate();
+		}finally {
+			close(pstmt);
+		}
+		return result;
 	}
 
 }

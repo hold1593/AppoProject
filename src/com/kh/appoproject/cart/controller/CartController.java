@@ -19,19 +19,16 @@ import com.kh.appoproject.common.ExceptionForward;
 import com.kh.appoproject.member.model.vo.Member;
 
 
-
 @WebServlet("/cart/*")
 public class CartController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-  
+    
     public CartController() {
         super();
-    
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
 		String uri = request.getRequestURI(); // 현재 요청 주소
 		String contextPath = request.getContextPath();
 		String command = uri.substring((contextPath+"/cart").length()); // 제일 뒤에 들어오는 주소만 잘라냄
@@ -74,7 +71,7 @@ public class CartController extends HttpServlet {
 		else if(command.equals("/selectCart")) {
 			
 			try {
-				List<Cart> cList = CartService.selectCart(loginMember);
+				List<Cart> cList = cartService.selectCart(loginMember);
 				request.setAttribute("cList", cList);
 				
 				path = "/WEB-INF/views/cart/cart.jsp";
@@ -108,11 +105,8 @@ public class CartController extends HttpServlet {
 			}
 		}	
 	}
-	
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

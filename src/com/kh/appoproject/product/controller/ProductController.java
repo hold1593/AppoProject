@@ -1,11 +1,10 @@
 package com.kh.appoproject.product.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -17,7 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import com.google.gson.JsonArray;
 import com.kh.appoproject.common.ExceptionForward;
 import com.kh.appoproject.common.MyFileRenamePolicy;
 import com.kh.appoproject.member.model.vo.Member;
@@ -200,16 +202,13 @@ public class ProductController extends HttpServlet {
 						fList.add(file);
 					}
 					
-					int result = ProductService.insertProduct(itemName, productForm, product, auction, basic, memberWriter, fList);
+					int result = productService.insertProduct(itemName, productForm, product, auction, basic, memberWriter, fList, savePath);
 					
 					if (result>0)	msg = "게시글 등록 성공";
 					else			msg = "게시글 등록 실패";
 					
-					String deviceNameUp = deviceName.toUpperCase();
-					request.setAttribute("deviceNameUp", deviceNameUp);
-					
 					request.getSession().setAttribute("msg", msg);
-					response.sendRedirect("list?item="+deviceNameUp);
+					response.sendRedirect("list?item="+deviceName);
 					
 				}
 			}catch(Exception e) {
@@ -253,15 +252,9 @@ public class ProductController extends HttpServlet {
 			try {
 				Product product = productService.updateForm(no);
 				
-				
-				System.out.println("product : " + product);
-				
 				if(product!=null) {
 					
 					List<Image> files = productService.selectFiles(no);
-					
-					System.out.println("files : "+ files);
-					
 					
 					if(!files.isEmpty()) {
 						request.setAttribute("files", files); // 리퀘스트로 전달
@@ -281,52 +274,53 @@ public class ProductController extends HttpServlet {
 		
 		// 상품 글 수정 Controller
 		else if(command.equals("/update")) {
-			int productNo = Integer.parseInt(request.getParameter("no"));
 			try {
+				int maxSize = 10 * 1024 * 1024;
+				String root = request.getSession().getServletContext().getRealPath("/");
+				String savePath = root + "resources/uploadImages/";
+				
+				// MultipartRequest 객체 생성
+				// 	-> 객체가 생성되는 순간에 request, 파일경로 지정, 최대파일 크기지정, 문자 인코딩 형식 지정
+				//	-> 변경된 파일명으로 지정된 경로로 파일이 저장됨
+				MultipartRequest multiRequest = 
+						new MultipartRequest(request, savePath, maxSize, "UTF-8", new MyFileRenamePolicy());
+				
+				int productNo = Integer.parseInt(multiRequest.getParameter("no"));
+				
+				
+				// *********** 글만 등록 ************
+				String productTitle = multiRequest.getParameter("productTitle");
+				String productComment = multiRequest.getParameter("productComment");
+				String deviceName = multiRequest.getParameter("deviceName");
+				int itemCode = 0;
+				//품목코드
+				String itemName = multiRequest.getParameter("itemName");
+				
+				int basicPrice = Integer.parseInt(multiRequest.getParameter("basicPrice"));
+				
+				Product product = new Product(productNo, productTitle, productComment, itemCode);
+				Product basic = new Product(basicPrice);
+				Member loginMember = (Member)request.getSession().getAttribute("loginMember");
+				int memberWriter = loginMember.getMember_No();
+				
+				String[] beforeImg = multiRequest.getParameterValues("beforeImg");
+				System.out.println("beforeImg : " + Arrays.toString(beforeImg));
+				
+				ArrayList<Image> fList = null;
+				
+				// 수정된 파일이 있는 경우
 				if(ServletFileUpload.isMultipartContent(request)) {
-					int maxSize = 10 * 1024 * 1024;
-					
-					String root = request.getSession().getServletContext().getRealPath("/");
-					
-					String savePath = root + "resources/uploadImages/";
-					
-					// MultipartRequest 객체 생성
-					// 	-> 객체가 생성되는 순간에 request, 파일경로 지정, 최대파일 크기지정, 문자 인코딩 형식 지정
-					//	-> 변경된 파일명으로 지정된 경로로 파일이 저장됨
-					MultipartRequest multiRequest = 
-							new MultipartRequest(request, savePath, maxSize, "UTF-8", new MyFileRenamePolicy());
-					
 					ArrayList<String> saveFiles = new ArrayList<String>();
-					
 					Enumeration<String> files = multiRequest.getFileNames();
-					
 					while(files.hasMoreElements()) {
 						String name = files.nextElement();
-						
 						if(multiRequest.getFilesystemName(name) != null) {
 							saveFiles.add(multiRequest.getFilesystemName(name));
 						}
 					}
 				
-					String productTitle = multiRequest.getParameter("productTitle");
-					String productComment = multiRequest.getParameter("productComment");
-					String deviceName = multiRequest.getParameter("deviceName");
-					int deviceCode= 0;
-					int itemCode = 0;
-					
-					int basicPrice = Integer.parseInt(multiRequest.getParameter("basicPrice"));
-					
-					Product product = new Product(productTitle, productComment, itemCode, deviceCode);
-					Product basic = new Product(basicPrice);
-					
-					Member loginMember = (Member)request.getSession().getAttribute("loginMember");
-					
-					//품목코드
-					String itemName = multiRequest.getParameter("itemName");
-					
-					int memberWriter = loginMember.getMember_No();
-					
-					ArrayList<Image> fList = new ArrayList<Image>();
+					// ***** 업로드 파일 목록 생성 ******
+					fList = new ArrayList<Image>();
 				
 					for(int i = saveFiles.size()-1 ; i>=0 ; i--) {
 						Image file = new Image();
@@ -339,20 +333,20 @@ public class ProductController extends HttpServlet {
 							file.setImageLevel(2);
 						}
 						fList.add(file);
-					}
+					}	
+				}
+			
+				int result = ProductService.updateProduct(itemName, product, basic, memberWriter, fList, beforeImg, savePath);
 				
-					int result = ProductService.updateProduct(itemName, product, basic, memberWriter, fList);
-					
-					if (result>0)	msg = "게시글 수정 성공";
-					else			msg = "게시글 수정 실패";
-					
-					String deviceNameUp = deviceName.toUpperCase();
-					request.setAttribute("deviceNameUp", deviceNameUp);
-					
-					request.getSession().setAttribute("msg", msg);
-					response.sendRedirect("list?item="+deviceNameUp);
+				if (result>0)	msg = "게시글 수정 성공";
+				else			msg = "게시글 수정 실패";
 				
-					}
+				String deviceNameUp = deviceName.toUpperCase();
+				request.setAttribute("deviceNameUp", deviceNameUp);
+				
+				request.getSession().setAttribute("msg", msg);
+				response.sendRedirect("list?item="+deviceNameUp);
+				
 			}catch(Exception e) {
 			ExceptionForward.errorPage(request, response, "게시글 등록", e);
 			}
@@ -403,6 +397,96 @@ public class ProductController extends HttpServlet {
 				
 			} catch(Exception e) {
 				ExceptionForward.errorPage(request, response, "신고하기", e);
+			}
+		}
+		
+		// 입찰 신청 기능 (모달 ajax)
+		else if(command.equals("/biddingProduct")) {
+			int productNo = Integer.parseInt(request.getParameter("productNo"));
+			int biddingPrice = Integer.parseInt(request.getParameter("biddingPrice"));
+			Member loginMember = (Member)request.getSession().getAttribute("loginMember");
+			
+			System.out.println("productNo:"+productNo);
+			System.out.println("biddingPrice:"+biddingPrice);
+			System.out.println("loginMember:"+loginMember.getMember_No());
+			try {
+				int result = productService.biddingProduct(productNo, biddingPrice, loginMember.getMember_No());
+				PrintWriter out = response.getWriter();
+				System.out.println("result1:" +result);
+				if(result>0) out.print(result);
+				else		 out.print(0);
+			}catch(Exception e) {
+				ExceptionForward.errorPage(request, response, "입찰 신청", e);
+			}
+		}
+		
+		// 입찰 신청 기능 (페이지 새로고침)
+		else if(command.equals("/bProduct")) {
+			int productNo = Integer.parseInt(request.getParameter("productNo"));
+			int biddingPrice = Integer.parseInt(request.getParameter("biddingPrice"));
+			Member loginMember = (Member)request.getSession().getAttribute("loginMember");
+			
+			System.out.println("productNo:"+productNo);
+			System.out.println("biddingPrice:"+biddingPrice);
+			System.out.println("loginMember:"+loginMember.getMember_No());
+			try {
+				int result = productService.biddingProduct(productNo, biddingPrice, loginMember.getMember_No());
+				if(result>0) {
+					msg="입찰 신청되었습니다.";
+				}else	{
+					msg="경매 입찰 신청 실패";
+				}
+				request.getSession().setAttribute("msg", msg);
+				view = request.getRequestDispatcher("/wish/wishlist");
+				view.forward(request, response);
+			}catch(Exception e) {
+				ExceptionForward.errorPage(request, response, "입찰 신청", e);
+			}
+		}
+		
+		// 카테고리 선택
+		else if(command.equals("/selectCate")) {
+			String deviceName = request.getParameter("deviceName");
+			
+			try {
+				List<String> iList = productService.selectItem(deviceName);
+				
+				JSONObject jo = null;
+				JSONArray jArr = new JSONArray();
+				
+				for(String str : iList) {
+					jo = new JSONObject();
+					jo.put("iList", str);
+					
+					jArr.add(jo);
+				}
+				//System.out.println(iList);
+				response.getWriter().print(jArr);
+			}catch(Exception e) {
+				ExceptionForward.errorPage(request, response, "목록 조회", e);
+			}
+		}
+		
+		// 카테고리2 선택(용량)
+		else if(command.equals("/selectInfo")) {
+			String itemName = request.getParameter("itemName");
+			
+			try {
+				List<String> gList = productService.selectInfo(itemName);
+				
+				JSONObject jo = null;
+				JSONArray jArr = new JSONArray();
+				
+				for(String str : gList) {
+					jo = new JSONObject();
+					jo.put("gList", str);
+					
+					jArr.add(jo);
+				}
+				//System.out.println(iList);
+				response.getWriter().print(jArr);
+			}catch(Exception e) {
+				ExceptionForward.errorPage(request, response, "목록 조회", e);
 			}
 		}
 		

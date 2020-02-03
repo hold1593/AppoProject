@@ -50,10 +50,12 @@
 						</div>
 					</div>
 					<div class="form-inline mb-5 pb-3">
+						<!--  
 						<select class="mr-2 form-control">
 							<option>최신순</option>
 							<option>인기순</option>
 						</select>
+						-->
 						<%-- 로그인이 되어있는 경우 --%>
 						<% if(loginMember != null){ %>
 						<button type="button" class="btn btn-danger ml-md-auto"
@@ -84,6 +86,9 @@
 	                                    %> 
 	                                    <img class="pic1" src="<%= src %>">
 									</a> <span class="product-new-label">경매</span>
+									<% if(product.getAuctionImmediateBid()>0){ %>
+									<span id="product-im-label">바로 구매</span>
+									<% } %>
 								</div>
 								<div class="product-content">
 									<h5 class="title py-3">
@@ -92,7 +97,7 @@
 									<span class="price text-danger"><%= product.getAuctionReservePrice() %></span>
 									<span>원</span>
 									<div class="time-wrap mt-2">
-										<span class="time text-muted"><%= product.getAuctionDeadline() %></span>
+										<span class="time text-muted"><%= product.getAuctionDeadline() %>&nbsp;까지</span>
 									</div>
 								</div>
 							</div>
@@ -179,13 +184,12 @@
     });
     
     
-    
     filterSelection("all")
     function filterSelection(c) {
         var x, i;
         x = document.getElementsByClassName("filterDiv");
         if (c == "all") c = "";
-        // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+        
         for (i = 0; i < x.length; i++) {
             RemoveClass(x[i], "show");
             if (x[i].className.indexOf(c) > -1) AddClass(x[i], "show");

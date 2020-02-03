@@ -90,7 +90,8 @@ public class ProductDao {
 									  rset.getString("PRODUCT_TITLE"), 
 									  rset.getString("PRODUCT_FORM"), 
 									  rset.getInt("PRODUCT_COUNT"), 
-									  rset.getInt("BASIC_PRICE"), 
+									  rset.getInt("BASIC_PRICE"),
+									  rset.getInt("AUCTION_IMMEDIATE_BID"),
 									  rset.getInt("AUCTION_RESERVE_PRICE"), 
 									  rset.getDate("AUCTION_DEADLINE"));
 				pList.add(product);
@@ -382,7 +383,6 @@ public class ProductDao {
 								 rset.getInt("PRODUCT_NO"));
 				files.add(file);
 				
-				System.out.println("files dao : " + files);
 			}
 		}finally {
 			close(rset);
@@ -390,6 +390,66 @@ public class ProductDao {
 		}
 		return files;
 	}
+	
+
+	/** 상품 게시글 수정용 Dao
+	 * @param conn
+	 * @param product
+	 * @param memberWriter
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateProduct(Connection conn, Product product, int memberWriter) throws Exception{
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = prop.getProperty("updateProduct");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, product.getProductTitle());
+			pstmt.setString(2, product.getProductComment());
+			pstmt.setInt(3, product.getItemCode());
+			pstmt.setInt(4, product.getProductNo());
+			
+			result = pstmt.executeUpdate();
+		}finally {
+			close(pstmt);
+		}
+		return 1;
+	}	
+	
+
+	/** 일반 상품 수정용 Dao
+	 * @param conn
+	 * @param basic
+	 * @param productNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBasic(Connection conn, Product basic, int productNo) throws Exception{
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = prop.getProperty("updateBasic");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, basic.getBasicPrice());
+			pstmt.setInt(2, productNo);
+			
+			result = pstmt.executeUpdate();
+		}finally {
+			close(pstmt);
+		}
+		return 1;
+	}
+	
+
+	/** 이미지 수정용 Dao
+	 * @param conn
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
 
 	public int deleteProduct(Connection conn, int no) throws Exception{
 		PreparedStatement pstmt = null;
@@ -472,13 +532,100 @@ public class ProductDao {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, productNo);
 			result = pstmt.executeUpdate();
-		} 
-		finally {
+		}finally {
 			close(pstmt);
 		}
 		return result;
-	}	
-	
+	}
 
+	public int biddingProduct(Connection conn, int productNo, int biddingPrice, int memberNo) throws Exception {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = prop.getProperty("biddingProduct");
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, biddingPrice);
+			pstmt.setInt(2, memberNo);
+			pstmt.setInt(3, productNo);
+			pstmt.setInt(4, biddingPrice);
+			result = pstmt.executeUpdate();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+	}
 
+	public int deleteBeforeImage(Connection conn, String beforePath) throws Exception {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = prop.getProperty("deleteBeforeImage");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, beforePath);
+			
+			result = pstmt.executeUpdate();
+		}finally {
+			close(pstmt);
+		}
+		return result;
+		
+	}
+
+	/** 아이템 목록 조회용 Dao
+	 * @param conn
+	 * @param deviceName
+	 * @return iList
+	 * @throws Exception
+	 */
+	public List<String> selectItem(Connection conn, String deviceName) throws Exception {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		List<String> iList = null;
+		String query = prop.getProperty("selectItem");
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, deviceName);
+			
+			rset = pstmt.executeQuery();
+			
+			iList = new ArrayList<String>();
+			String product = null;
+			
+			while(rset.next()) {
+				product = new String(rset.getString("ITEM_NAME"));
+				iList.add(product);
+			}
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return iList;
+	}
+
+	public List<String> selectInfo(Connection conn, String itemName) throws Exception {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		List<String> gList = null;
+		String query = prop.getProperty("selectInfo");
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, itemName);
+			
+			rset = pstmt.executeQuery();
+			
+			gList = new ArrayList<String>();
+			String product = null;
+			
+			while(rset.next()) {
+				product = new String(rset.getString("ITEM_INFO"));
+				gList.add(product);
+				System.out.println(gList);
+			}
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return gList;
+	}
 }
